@@ -3,20 +3,21 @@ import ReactMarkdown from "react-markdown";
 import Head from "next/head";
 import { createParser } from "eventsource-parser";
 import TextareaAutosize from "react-textarea-autosize";
+import Navbar from "../components/Navbar";
+import { useUser } from "@supabase/auth-helpers-react";
+import { streamOpenAIResponse } from "@/utils/openai";
 
 const SYSTEM_MESSAGE =
   "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs.";
 
 export default function Home() {
-  const [apiKey, setApiKey] = useState("");
+  const user = useUser();
 
   const [messages, setMessages] = useState([
     { role: "system", content: SYSTEM_MESSAGE },
   ]);
 
   const [userMessage, setUserMessage] = useState("");
-
-  const API_URL = "https://api.openai.com/v1/chat/completions";
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -26,14 +27,13 @@ export default function Home() {
   };
 
   const sendRequest = async () => {
-    if (!userMessage) {
-      alert("Please enter a message before you hit send");
+    if (!user) {
+      alert("Please log in to send a message");
+      return;
     }
 
-    if (!apiKey) {
-      alert(
-        "Please provide your OpenAI API key in the navbar. Get it from https://platform.openai.com . NOTE: Your API key is never sent to our server."
-      );
+    if (!userMessage) {
+      alert("Please enter a message before you hit send");
       return;
     }
 
@@ -52,11 +52,10 @@ export default function Home() {
     setUserMessage("");
 
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
@@ -66,47 +65,17 @@ export default function Home() {
       });
 
       if (response.status !== 200) {
-        throw new Error(
-          `OpenAI API returned an error. Please ensure you've provided the right API key. Check the "Console" or "Network" of your browser's developer tools for details.`
-        );
+        throw new Error(`OpenAI API returned an error.`);
       }
 
-      const reader = response.body.getReader();
-
-      let newMessage = "";
-      const parser = createParser((event) => {
-        if (event.type === "event") {
-          const data = event.data;
-          if (data === "[DONE]") {
-            return;
-          }
-          const json = JSON.parse(event.data);
-          const content = json.choices[0].delta.content;
-
-          if (!content) {
-            return;
-          }
-
-          newMessage += content;
-
-          const updatedMessages2 = [
-            ...updatedMessages,
-            { role: "assistant", content: newMessage },
-          ];
-
-          setMessages(updatedMessages2);
-        } else {
-          return "";
-        }
+      streamOpenAIResponse(response, (newMessage) => {
+        console.log("newMessage:", newMessage);
+        const updatedMessages2 = [
+          ...updatedMessages,
+          { role: "assistant", content: newMessage },
+        ];
+        setMessages(updatedMessages2);
       });
-
-      // eslint-disable-next-line
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const text = new TextDecoder().decode(value);
-        parser.feed(text);
-      }
     } catch (error) {
       console.error("error");
 
@@ -123,18 +92,7 @@ export default function Home() {
       </Head>
       <div className="flex flex-col h-screen">
         {/* Navigation Bar */}
-        <nav className="shadow px-4 py-2 flex flex-row justify-between items-center">
-          <div className="text-xl font-bold">Jobot</div>
-          <div>
-            <input
-              type="password"
-              className="border p-1 rounded"
-              onChange={(e) => setApiKey(e.target.value)}
-              value={apiKey}
-              placeholder="Paste API Key here"
-            />
-          </div>
-        </nav>
+        <Navbar />
 
         {/* Message History */}
         <div className="flex-1 overflow-y-scroll ">
