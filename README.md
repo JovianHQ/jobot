@@ -62,7 +62,7 @@ Jobot is completely open-source and we welcome all forms of contributions from t
 
 Follow these steps to deploy your own copy of Jobot the Vercel:
 
-1. Fork this repostory to get your own copy of the source code
+1. Fork [this repostory](https://github.com/jovianhq/jobot) to get your own copy of the source code
 
 2. Sign up on https://platform.openai.com and generate an [Open API Key](https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key)
 
