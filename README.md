@@ -2,9 +2,7 @@
 
 [![](https://i.imgur.com/1sPbh8y.png)](https://jobot.dev)
 
-This repository contains the source code for [Jobot](https://jobot.dev), a general purpose programmable & extensible AI being developed by [Jovian](https://jovian.com), using state of the art machine learning models and APIs.
-
-Follow the development of Jobot with our free online course: https://howotobuildanai.com
+This repository contains the source code for [Jobot](https://jobot.dev), a general purpose, programmable & extensible AI being developed by [Jovian](https://jovian.com), using state of the art machine learning models and APIs. Follow the development of Jobot here: https://howotobuildanai.com
 
 ## Abilities
 
@@ -116,6 +114,8 @@ After you've deployed your own copy of Jobot, follow these additional steps to d
 6. If you've set up a Vercel project, any changes made to the `main` branch of your repository will get pushed automatically
 
 **NOTE**: If you'd like to contribute your changes back to the original repository https://github.com/jovianhq/jobot, please [create a pull request from your fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork). We welcome community contributions to Jobot!
+
+Check out our course for a deatailed walkthrough of the codebase: https://howotobuildanai.com
 
 ## Disclaimer
 
