@@ -82,7 +82,10 @@ Follow these steps to deploy your own copy of Jobot the Vercel:
 
 5. (Optional) [Connect a custom domain](https://vercel.com/docs/concepts/projects/domains/add-a-domain) (e.g. https://jobot.dev ) to your Vercel project.
 
-Follow these additional steps to run and develop Jobot locally:
+
+## Development
+
+After you've deployed your own copy of Jobot, follow these additional steps to develop Jobot:
 
 1. Clone your repository to your computer or open it online [using GitHub Codespaces](https://docs.github.com/en/codespaces/developing-in-codespaces/creating-a-codespace-for-a-repository#creating-a-codespace-for-a-repository)
 
@@ -112,9 +115,7 @@ Follow these additional steps to run and develop Jobot locally:
 
 6. If you've set up a Vercel project, any changes made to the `main` branch of your repository will get pushed automatically
 
-**NOTE**: If you'd like to contribute your changes back to the original repository https://github.com/jovianhq/jobot, please [create a pull request from your fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork).
-
-We welcome community contributions to Jobot!
+**NOTE**: If you'd like to contribute your changes back to the original repository https://github.com/jovianhq/jobot, please [create a pull request from your fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork). We welcome community contributions to Jobot!
 
 ## Disclaimer
 
