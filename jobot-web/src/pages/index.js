@@ -74,6 +74,12 @@ export default function Home() {
           { role: "assistant", content: newMessage },
         ];
         setMessages(updatedMessages2);
+
+        // Now scroll most recent message 'into view'...
+        const element = document.getElementById("last");
+        element.scrollIntoView({
+          behaviour: "smooth",
+        });
       });
     } catch (error) {
       console.error("error");
@@ -98,12 +104,17 @@ export default function Home() {
           <div className="w-full max-w-screen-md mx-auto px-4">
             {messages
               .filter((message) => message.role !== "system")
-              .map((message, idx) => (
+              .map((message, idx, row) => (
                 <div key={idx} className="my-3">
                   <div className="font-bold">
                     {message.role === "user" ? "You" : "Jobot"}
                   </div>
-                  <div className="text-lg prose">
+                  <div
+                    // Give this row an index, mark the last row as 'last'
+                    // we will use that to scroll this last row 'into view'
+                    id={idx + 1 === row.length ? "last" : idx}
+                    className="text-lg prose"
+                  >
                     <ReactMarkdown>{message.content}</ReactMarkdown>
                   </div>
                 </div>
