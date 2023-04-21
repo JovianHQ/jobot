@@ -16,7 +16,9 @@ export default function TemplatePage({ template }) {
   return (
     <>
       <Head>
-        <title>Jobot - The AI That Does Everything</title>
+        <title>{template.title} - Jobot</title>
+        <meta name="description" content={template.description} />
+
         <link rel="icon" href="/jovian_favicon.png" type="image/png" />
       </Head>
       <div className="flex flex-col h-screen">
