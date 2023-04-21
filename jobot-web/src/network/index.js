@@ -8,7 +8,7 @@ export async function getTemplates() {
       cache: "no-store",
     }
   );
-  return res.json();
+  return await res.json();
 }
 
 export async function getSystemPrompt(slug) {

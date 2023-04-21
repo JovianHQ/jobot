@@ -1,7 +1,15 @@
-import { Link } from "shared/router/index";
+import { getTemplates } from "@/network";
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-const Templates = ({ templates }) => {
+const Templates = () => {
+  const [templates, setTemplates] = useState([]);
+
+  useEffect(() => {
+    getTemplates().then((templates) => setTemplates(templates));
+  }, [templates, setTemplates]);
+
   return (
     <ul
       role="list"
@@ -12,7 +20,7 @@ const Templates = ({ templates }) => {
           className="group col-span-1 cursor-pointer divide-y divide-gray-200 rounded-lg border bg-white hover:shadow dark:border-gray-400 dark:bg-transparent"
           key={template.slug}
         >
-          <Link to={`/${template.slug}`}>
+          <Link href={`/${template.slug}`}>
             <div className="flex h-full w-full flex-col p-5">
               <div>
                 <span className="inline-flex rounded-lg">
