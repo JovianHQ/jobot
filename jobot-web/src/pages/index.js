@@ -1,11 +1,10 @@
 import { useState } from "react";
-import ReactMarkdown from "react-markdown";
 import Head from "next/head";
 import Navbar from "../components/Navbar";
 import { useUser } from "@supabase/auth-helpers-react";
 import { streamOpenAIResponse } from "@/utils/openai";
 import MessageInput from "@/components/MessageInput";
-import Message from "@/components/Message";
+import MessageHistory from "@/components/MessageHistory";
 
 const SYSTEM_MESSAGE =
   "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs.";
@@ -80,29 +79,8 @@ export default function Home() {
         <title>Jobot - Your friendly neighborhood AI</title>
       </Head>
       <div className="flex flex-col h-screen">
-        {/* Navigation Bar */}
         <Navbar />
-
-        {/* Message History */}
-        <div className="flex-1 overflow-y-scroll ">
-          <div className="w-full max-w-screen-md mx-auto px-4">
-            {messages
-              .filter((message) => message.role !== "system")
-              .map((message, idx) => (
-                // <div key={idx} className="my-3">
-                //   <div className="font-bold">
-                //     {message.role === "user" ? "You" : "Jobot"}
-                //   </div>
-                //   <div className="text-lg prose">
-                //     <ReactMarkdown>{message.content}</ReactMarkdown>
-                //   </div>
-                // </div>
-                <Message key={idx} {...message} />
-              ))}
-          </div>
-        </div>
-
-        {/* Message Input Box */}
+        <MessageHistory history={messages} />
         <MessageInput sendMessage={sendRequest} />
       </div>
     </>
