@@ -5,6 +5,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import Navbar from "../components/Navbar";
 import { useUser } from "@supabase/auth-helpers-react";
 import { streamOpenAIResponse } from "@/utils/openai";
+import JobotPageMessageForm from "@/components/JobotMessageForm";
 
 const SYSTEM_MESSAGE =
   "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs.";
@@ -16,16 +17,7 @@ export default function Home() {
     { role: "system", content: SYSTEM_MESSAGE },
   ]);
 
-  const [userMessage, setUserMessage] = useState("");
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      sendRequest();
-    }
-  };
-
-  const sendRequest = async () => {
+  const sendRequest = async (userMessage) => {
     if (!user) {
       alert("Please log in to send a message");
       return;
@@ -48,7 +40,6 @@ export default function Home() {
     ];
 
     setMessages(updatedMessages);
-    setUserMessage("");
 
     try {
       const response = await fetch("/api/chat", {
@@ -75,10 +66,10 @@ export default function Home() {
         ];
         setMessages(updatedMessages2);
       });
+
+      return true;
     } catch (error) {
       console.error("error");
-
-      setUserMessage(oldUserMessage);
       setMessages(oldMessages);
       window.alert("Error:" + error.message);
     }
@@ -112,26 +103,7 @@ export default function Home() {
         </div>
 
         {/* Message Input Box */}
-        <div>
-          <div className="w-full max-w-screen-md mx-auto flex px-4 pb-4 items-start">
-            <TextareaAutosize
-              value={userMessage}
-              autoFocus
-              maxRows={10}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask me anything.."
-              onChange={(e) => setUserMessage(e.target.value)}
-              className="border text-lg rounded-md p-2 flex-1 resize-none"
-              rows={1}
-            />
-            <button
-              onClick={sendRequest}
-              className="bg-blue-500 hover:bg-blue-600 border rounded-md text-white text-lg w-20 p-2 ml-2"
-            >
-              Send
-            </button>
-          </div>
-        </div>
+        <JobotPageMessageForm sendMessage={sendRequest} />
       </div>
     </>
   );
