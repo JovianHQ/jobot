@@ -31,7 +31,7 @@ export default function Home() {
         {history.length <= 1 && (
           <div className="flex-1 overflow-y-auto ">
             <div className="mx-auto max-w-4xl overflow-y-auto w-full">
-              <h1 className="mx-auto my-6 w-full max-w-4xl text-4xl font-medium text-center">
+              <h1 className="mx-auto mt-4 my-6 w-full max-w-4xl text-4xl font-medium text-center">
                 Jobot - The AI That Does Everything
               </h1>
             </div>

@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Navbar() {
   const user = useUser();
   return (
-    <nav className="shadow px-2">
+    <nav className="shadow px-2 z-40">
       <div className="flex w-full max-w-4xl py-3 items-center justify-between mx-auto">
         <div className="text-2xl font-medium text-gray-800 flex items-center">
           <Link href="/" onClick={() => (window.location = "/")}>
