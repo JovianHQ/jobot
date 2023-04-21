@@ -7,13 +7,15 @@ import { useState } from "react";
 
 const MessageInput = ({
   sending,
-  sendMessage,
+  sendMessages,
   placeholder = "Start typing here...",
 }) => {
   const inputRef = useRef(null);
   const [prompt, setPrompt] = useState("");
   const handleSendClick = () => {
-    sendMessage(prompt).then((success) => !success && setPrompt(prompt));
+    sendMessages([{ role: "user", content: prompt }]).then(
+      (success) => !success && setPrompt(prompt)
+    );
     setPrompt("");
   };
 

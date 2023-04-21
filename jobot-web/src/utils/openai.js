@@ -1,4 +1,7 @@
+import { useUser } from "@supabase/auth-helpers-react";
 import { createParser } from "eventsource-parser";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 export const OpenAIStream = async (body) => {
   const encoder = new TextEncoder();
@@ -64,4 +67,54 @@ export async function streamOpenAIResponse(response, callback) {
     callback(text, isFirst);
     isFirst = false;
   }
+}
+
+export async function postOpenAIMessages(messages) {
+  return await fetch("/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ messages, stream: true }),
+  });
+}
+
+const SYSTEM_MESSAGE =
+  "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs.";
+
+export default function useOpenAIMessages() {
+  const [history, setHistory] = useState([
+    { role: "system", content: SYSTEM_MESSAGE },
+  ]);
+  const [sending, setSending] = useState(false);
+  const user = useUser();
+
+  const sendMessages = async (newMessages) => {
+    if (!user) {
+      toast.error("You must be logged in to send a message");
+    }
+
+    const oldHistory = history;
+    const newHistory = [...history, ...newMessages];
+    setSending(true);
+    setHistory(newHistory);
+
+    const response = await postOpenAIMessages(newHistory);
+
+    if (!response.ok || !response.body) {
+      setSending(false);
+      setHistory(oldHistory);
+      toast.error("Failed to send:" + response.statusText);
+    }
+
+    await streamOpenAIResponse(response, (content) => {
+      setHistory([...newHistory, { role: "assistant", content }]);
+    });
+
+    setSending(false);
+
+    return true;
+  };
+
+  return { history, setHistory, sending, sendMessages };
 }
