@@ -80,7 +80,6 @@ Follow these steps to deploy your own copy of Jobot the Vercel:
 
 5. (Optional) [Connect a custom domain](https://vercel.com/docs/concepts/projects/domains/add-a-domain) (e.g. https://jobot.dev ) to your Vercel project.
 
-
 ## Development
 
 After you've deployed your own copy of Jobot, follow these additional steps to develop Jobot:
@@ -102,12 +101,12 @@ After you've deployed your own copy of Jobot, follow these additional steps to d
 3. Create a file `.env.local` inside the `jobot-web` folder and add proper values for the following enviroment variables:
 
    ```
-   NEXT_PUBLIC_SUPABSE_URL=xxx
+   NEXT_PUBLIC_SUPABASE_URL=xxx
    NEXT_PUBLIC_SUPABASE_ANON_KEY=xxx
    OPENAI_API_KEY=xxx
    ```
 
-4. Make any desired code changes and the development server should refresh the application automatically 
+4. Make any desired code changes and the development server should refresh the application automatically
 
 5. [Stage, commit, and push](https://zeroesandones.medium.com/how-to-commit-and-push-your-changes-to-your-github-repository-in-vscode-77a7a3d7dd02) your changes back to the GitHub repository when ready
 

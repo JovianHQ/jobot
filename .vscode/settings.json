@@ -1,5 +1,4 @@
 {
-    "eslint.workingDirectories": [
-        "./jobot-web"
-    ]
+  "eslint.workingDirectories": ["./jobot-web"],
+  "editor.tabSize": 2
 }
