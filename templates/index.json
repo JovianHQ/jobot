@@ -1,0 +1,216 @@
+[
+  {
+    "slug": "leetcode-assistant",
+    "title": "LeetCode Assistant",
+    "description": "Your personal programming coach powered by ChatGPT. Just share your solution and get instant feedback on what's going wrong.",
+    "iconUrl": "https://i.imgur.com/wEUyNwm.png",
+    "inputs": [
+      {
+        "field": "question",
+        "title": "Question",
+        "type": "textarea",
+        "placeholder": "Paste the question here"
+      },
+      {
+        "field": "studentCode",
+        "title": "Your Code",
+        "type": "code",
+        "placeholder": "Paste your code here"
+      },
+      {
+        "field": "language",
+        "title": "Programming Language",
+        "type": "text",
+        "placeholder": "Enter language here"
+      }
+    ]
+  },
+  {
+    "slug": "mock-interview",
+    "title": "Mock Interview",
+    "description": "Simulate an interview for any job position, providing personalized feedback and helping you prepare for your real interview.",
+    "iconUrl": "https://i.imgur.com/CRBxvAz.png",
+    "inputs": [
+      {
+        "field": "position",
+        "title": "Job Role",
+        "type": "text",
+        "placeholder": "Enter job role here"
+      }
+    ]
+  },
+  {
+    "slug": "code-explainer",
+    "title": "Code Explainer",
+    "description": "Breaks down any piece of code and provides a clear explanation of its functionality, helping you understand programming concepts and improve your coding skills. ",
+    "iconUrl": "https://i.imgur.com/gznl8L8.png",
+    "inputs": [
+      {
+        "field": "language",
+        "title": "Programming Language",
+        "type": "text",
+        "placeholder": "Enter language here"
+      },
+      {
+        "field": "code",
+        "title": "Code",
+        "type": "code",
+        "placeholder": "Paste the code here"
+      }
+    ]
+  },
+
+  {
+    "slug": "code-error-debugger",
+    "title": "Code Error Debugger",
+    "description": "Your personal assistant to quickly diagnose and solve coding errors step-by-step. Get instant help and fix bugs like a pro!",
+    "iconUrl": "https://i.imgur.com/G0rtuky.png",
+    "inputs": [
+      {
+        "field": "language",
+        "title": "Programming Language",
+        "type": "text",
+        "placeholder": "Enter language here"
+      },
+      {
+        "field": "userCode",
+        "title": "Code",
+        "type": "code",
+        "placeholder": "Paste your code here"
+      },
+      {
+        "field": "userError",
+        "title": "Error",
+        "type": "code",
+        "placeholder": "Paste the full error message here"
+      },
+      {
+        "field": "userObjective",
+        "title": "What are you trying to do?",
+        "type": "textarea",
+        "placeholder": "Anything you can share about your objective or goal"
+      }
+    ]
+  },
+  {
+    "slug": "quiz-master",
+    "title": "Quiz Master",
+    "description": "Practice your knowledge and understanding of any topic by dynamic AI-generated multiple choice questions with detailed explanations.",
+    "iconUrl": "https://i.imgur.com/SYL3f0M.png",
+    "inputs": [
+      {
+        "field": "topic",
+        "title": "Topic",
+        "type": "text",
+        "placeholder": "Which topic do you want to revise?"
+      },
+      {
+        "field": "difficulty",
+        "title": "Difficulty Level",
+        "type": "select",
+        "placeholder": "Enter Easy, Medium, or Hard",
+        "options": ["Easy", "Medium", "Hard", "Very Hard"]
+      }
+    ]
+  },
+  {
+    "slug": "personal-tutor",
+    "title": "Personal Tutor",
+    "description": "Generates on-demand tutorials on any topic. Use it for quick learning, exam prep or simply satisfying your curiosity.",
+    "iconUrl": "https://i.imgur.com/cUgkLP8.png",
+    "inputs": [
+      {
+        "field": "topic",
+        "title": "Topic",
+        "type": "text",
+        "placeholder": "What do you want to learn about?"
+      }
+    ]
+  },
+  {
+    "slug": "cover-letter-generator",
+    "title": "Cover Letter Generator",
+    "description": "Supply your resume and some information about a job role you're applying for and generate a cover letter.",
+    "iconUrl": "https://i.imgur.com/1jVGsuF.png",
+    "inputs": [
+      {
+        "field": "jobRole",
+        "title": "Job Role",
+        "type": "text",
+        "placeholder": "Data Analyst"
+      },
+      {
+        "field": "company",
+        "title": "Company",
+        "type": "text",
+        "placeholder": "IBM"
+      },
+      {
+        "field": "jobResponsibilities",
+        "title": "Job Responsibilities",
+        "type": "textarea",
+        "placeholder": "Paste information from the roles & responsibilities section from the job description here"
+      },
+      {
+        "field": "resume",
+        "title": "Your Resume",
+        "type": "textarea",
+        "placeholder": "Paste relevant information (e.g. education, work experience, projects) from your Resume here"
+      }
+    ]
+  },
+  {
+    "slug": "email-generator",
+    "title": "Email Generator",
+    "description": "Generate professional and personalized emails in seconds. Simply input your message and let AI do the rest.",
+    "iconUrl": "https://i.imgur.com/cUgkLP8.png",
+    "inputs": [
+      {
+        "field": "subject",
+        "title": "Subject",
+        "type": "text",
+        "placeholder": "What is the email about?"
+      },
+      {
+        "field": "description",
+        "title": "Description",
+        "type": "textarea",
+        "placeholder": "Paste your draft, if you have one, just list some bullet points to generate the content of the email"
+      }
+    ]
+  },
+  {
+    "slug": "youtube-title-generator",
+    "title": "YouTube Title Generator",
+    "description": "Brainstorm creative and attention-grabbing titles for your YouTube videos, to generate more clicks and views.",
+    "iconUrl": "https://i.imgur.com/0BloXDE.png",
+    "inputs": [
+      {
+        "field": "description",
+        "title": "Video Description",
+        "type": "textarea",
+        "placeholder": "Enter a description of the video here"
+      },
+      {
+        "field": "ideas",
+        "title": "Initial Title Ideas",
+        "type": "textarea",
+        "placeholder": "Enter some initial title ideas here"
+      }
+    ]
+  },
+  {
+    "slug": "youtube-shorts-script",
+    "title": "YouTube Shorts Script",
+    "description": "Save time and increase the chances of your YouTube short going viral by leveraging the power of AI to create content that resonates with your audience.",
+    "iconUrl": "https://i.imgur.com/H5M0JsD.png",
+    "inputs": [
+      {
+        "field": "videoDescription",
+        "title": "Video Description",
+        "type": "textarea",
+        "placeholder": "Enter a description of the video here"
+      }
+    ]
+  }
+]

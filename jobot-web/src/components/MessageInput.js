@@ -4,6 +4,7 @@ import { AiOutlineSend } from "react-icons/ai";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import TextArea from "react-textarea-autosize";
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 const MessageInput = ({
   sending,
@@ -13,6 +14,10 @@ const MessageInput = ({
   const inputRef = useRef(null);
   const [prompt, setPrompt] = useState("");
   const handleSendClick = () => {
+    if (!prompt) {
+      toast.error("Enter a message before you hit send.");
+    }
+
     sendMessages([{ role: "user", content: prompt }]).then(
       (success) => !success && setPrompt(prompt)
     );

@@ -1,0 +1,3 @@
+TOPIC: {{topic}}
+
+DIFFICULTY: {{difficulty}}
