@@ -18,7 +18,6 @@ export default function TemplatePage({ template }) {
       <Head>
         <title>{template.title} - Jobot</title>
         <meta name="description" content={template.description} />
-
         <link rel="icon" href="/jovian_favicon.png" type="image/png" />
       </Head>
       <div className="flex flex-col h-screen">

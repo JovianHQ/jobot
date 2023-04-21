@@ -12,6 +12,10 @@ export default function Home() {
     <>
       <Head>
         <title>Jobot - The AI That Does Everything</title>
+        <meta
+          name="description"
+          content="Jobot is a general purpose, programmable & extensible AI being developed by Jovian, using state of the art machine learning models and APIs. "
+        />
         <link rel="icon" href="/jovian_favicon.png" type="image/png" />
       </Head>
       <div className="flex flex-col h-screen">
