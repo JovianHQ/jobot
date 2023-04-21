@@ -10,10 +10,12 @@ export default function Navbar() {
         <div className="text-2xl font-medium text-gray-800 flex items-center">
           <Link href="/" onClick={() => (window.location = "/")}>
             <Image
-              src="/jovian_favicon.png"
-              width={32}
+              src="/jobot_text_logo.png"
               height={32}
+              width={117}
+              className="object-contain"
               alt="logo"
+              unoptimized
             />
           </Link>
         </div>

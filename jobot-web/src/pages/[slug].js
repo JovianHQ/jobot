@@ -18,7 +18,8 @@ export default function TemplatePage({ template }) {
       <Head>
         <title>{template.title} - Jobot</title>
         <meta name="description" content={template.description} />
-        <link rel="icon" href="/jovian_favicon.png" type="image/png" />
+        <link rel="icon" href="/jobot_icon.png" type="image/png" />
+        <meta property="og:image" content="/jobot_meta.png" />
       </Head>
       <div className="flex flex-col h-screen">
         <Navbar />
