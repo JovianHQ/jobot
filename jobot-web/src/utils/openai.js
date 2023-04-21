@@ -92,6 +92,7 @@ export default function useOpenAIMessages() {
   const sendMessages = async (newMessages) => {
     if (!user) {
       toast.error("You must be logged in to send a message");
+      return;
     }
 
     const oldHistory = history;
