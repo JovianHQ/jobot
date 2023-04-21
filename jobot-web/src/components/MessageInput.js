@@ -5,7 +5,7 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import TextArea from "react-textarea-autosize";
 import { useState } from "react";
 
-const JobotPageMessageForm = ({
+const MessageInput = ({
   sending,
   sendMessage,
   placeholder = "Start typing here...",
@@ -58,4 +58,4 @@ const JobotPageMessageForm = ({
   );
 };
 
-export default JobotPageMessageForm;
+export default MessageInput;

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import Head from "next/head";
-import TextareaAutosize from "react-textarea-autosize";
 import Navbar from "../components/Navbar";
 import { useUser } from "@supabase/auth-helpers-react";
 import { streamOpenAIResponse } from "@/utils/openai";
-import JobotPageMessageForm from "@/components/JobotMessageForm";
+import MessageInput from "@/components/MessageInput";
+import Message from "@/components/Message";
 
 const SYSTEM_MESSAGE =
   "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs.";
@@ -28,7 +28,6 @@ export default function Home() {
       return;
     }
 
-    const oldUserMessage = userMessage;
     const oldMessages = messages;
 
     const updatedMessages = [
@@ -90,20 +89,21 @@ export default function Home() {
             {messages
               .filter((message) => message.role !== "system")
               .map((message, idx) => (
-                <div key={idx} className="my-3">
-                  <div className="font-bold">
-                    {message.role === "user" ? "You" : "Jobot"}
-                  </div>
-                  <div className="text-lg prose">
-                    <ReactMarkdown>{message.content}</ReactMarkdown>
-                  </div>
-                </div>
+                // <div key={idx} className="my-3">
+                //   <div className="font-bold">
+                //     {message.role === "user" ? "You" : "Jobot"}
+                //   </div>
+                //   <div className="text-lg prose">
+                //     <ReactMarkdown>{message.content}</ReactMarkdown>
+                //   </div>
+                // </div>
+                <Message key={idx} {...message} />
               ))}
           </div>
         </div>
 
         {/* Message Input Box */}
-        <JobotPageMessageForm sendMessage={sendRequest} />
+        <MessageInput sendMessage={sendRequest} />
       </div>
     </>
   );
