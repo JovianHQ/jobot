@@ -212,5 +212,25 @@
         "placeholder": "Enter a description of the video here"
       }
     ]
+  },
+  {
+    "slug": "blog-writer",
+    "title": "Blog Writer",
+    "description": "Just provide a topic and some notes and have the first draft of your blog post written for you",
+    "iconUrl": "https://i.imgur.com/1jVGsuF.png",
+    "inputs": [
+      {
+        "field": "topic",
+        "title": "Topic",
+        "type": "text",
+        "placeholder": "Enter the title of your blog post"
+      },
+      {
+        "field": "notes",
+        "title": "Notes",
+        "type": "textarea",
+        "placeholder": "Enter some notes about what the blog covers"
+      }
+    ]
   }
 ]

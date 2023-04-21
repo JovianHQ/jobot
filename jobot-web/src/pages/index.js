@@ -31,18 +31,18 @@ export default function Home() {
         {history.length <= 1 && (
           <div className="flex-1 overflow-y-auto ">
             <div className="mx-auto max-w-4xl overflow-y-auto w-full">
-              <h1 className="mx-auto mt-4 my-6 w-full max-w-4xl text-4xl font-medium text-center">
+              <h1 className="mx-auto mt-4 my-6 w-full max-w-4xl text-4xl font-medium text-center mx-2">
                 Jobot - The AI That Does Everything
               </h1>
             </div>
+
             <MessageInput
               sending={sending}
               sendMessages={sendMessages}
               placeholder="Ask me anything.."
             />
-            <div className="mx-auto max-w-4xl overflow-y-auto pb-8 w-full">
-              <Templates />
-            </div>
+
+            <Templates />
           </div>
         )}
       </div>
