@@ -9,7 +9,7 @@ This repository contains the source code for [Jobot](https://jobot.dev), a gener
 Jobot has (or will soon have) the following abilities:
 
 - ✅ Intelligence (powered by GPT-3.5/4)
-- ⬜️ Skills (preconfigured prompts)
+- ✅ Skills (preconfigured prompts)
 - ⬜️ Hearing (powered by Whisper)
 - ⬜️ Speech (powered by Neural2)
 - ⬜️ Memory (powered by Databases/Embeddings)
@@ -55,7 +55,7 @@ Jobot is completely open-source and we welcome all forms of contributions from t
 - Report bugs & suggest features by [creating an issue](https://github.com/JovianHQ/jobot/issues)
 - Fix bugs & add features by [opening a pull request](https://github.com/JovianHQ/jobot/pulls)
 - To show your love for the project, [star this repository](https://github.com/JovianHQ/jobot)
-- Ask a question or provide suggestions by [starting a discussion](https://github.com/JovianHQ/jobot/discussions)
+- Ask a question or provide suggestions by [starting a discussion](https://jovian.com/learn/how-to-build-an-ai/discussions)
 - Blog or tweet about the project to help spread the word
 
 ## Deployment
