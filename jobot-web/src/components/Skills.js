@@ -1,3 +1,4 @@
+import { makeDisplayName } from "@/utils";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,7 +7,14 @@ import { toast } from "react-hot-toast";
 
 async function getSkills(supabase) {
   try {
-    const { data, error } = await supabase.from("skills").select("*");
+    const { data, error } = await supabase.from("skills").select(`
+        *,
+        profiles (
+          username,
+          first_name,
+          last_name
+        )
+      `);
     if (error) {
       throw error;
     }
@@ -33,32 +41,36 @@ const Skills = () => {
           role="list"
           className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {skills.map((template) => (
+          {skills.map((skill) => (
             <li
               className="group col-span-1 cursor-pointer divide-y divide-gray-200 rounded-lg border bg-white hover:shadow dark:border-gray-400 dark:bg-transparent"
-              key={template.slug}
+              key={skill.slug}
             >
-              <Link href={`/${template.slug}`}>
+              <Link href={`/${skill.profiles.username}/${skill.slug}`}>
                 <div className="flex h-full w-full flex-col p-5">
                   <div>
-                    {template.iconUrl && (
+                    {skill.iconUrl && (
                       <span className="inline-flex rounded-lg">
                         <Image
-                          src={template.iconUrl}
+                          src={skill.iconUrl}
                           width={32}
                           height={32}
                           className="h-8 w-8"
-                          alt={template.title}
+                          alt={skill.title}
                           unoptimized
                         />
                       </span>
                     )}
                   </div>
                   <h3 className="mt-2 truncate text-lg font-medium text-gray-900 group-hover:text-blue-600 dark:text-white">
-                    {template.title}
+                    {skill.title}
                   </h3>
 
-                  <p className="mt-1 text-gray-500">{template.description}</p>
+                  <p className="mt-1 text-gray-500">{skill.description}</p>
+
+                  <div className="mt-2 text-gray-500 font-medium text-sm">
+                    {makeDisplayName(skill.profiles)}
+                  </div>
                 </div>
               </Link>
             </li>

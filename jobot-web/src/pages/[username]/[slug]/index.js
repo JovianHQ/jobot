@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Navbar from "../components/Navbar";
+import Navbar from "@/components/Navbar";
 import useOpenAIMessages from "@/utils/openai";
 import MessageHistory from "@/components/MessageHistory";
 import MessageInput from "@/components/MessageInput";
@@ -42,11 +42,13 @@ export default function SkillPage({ skill }) {
 export async function getServerSideProps(context) {
   const supabase = createServerSupabaseClient(context);
   const slug = context.params.slug;
+  const username = context.params.username;
 
   const { data: skill, error } = await supabase
     .from("skills")
-    .select("*")
+    .select("*,profiles(username, first_name, last_name)")
     .eq("slug", slug)
+    .eq("profiles.username", username)
     .single();
 
   if (error) {

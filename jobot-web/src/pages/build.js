@@ -1,7 +1,5 @@
+import { EditSkillForm } from "@/components/EditSkillForm";
 import Navbar from "@/components/Navbar";
-import SlugInput from "@/components/inputs/SlugInput";
-import TextArea from "@/components/inputs/TextArea";
-import TextInput from "@/components/inputs/TextInput";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Head from "next/head";
 import { useState } from "react";
@@ -18,17 +16,17 @@ export default function BuildPage() {
       return;
     }
     try {
-      const skillData = {
-        title: inputData.title,
-        slug: inputData.slug,
-        description: inputData.description,
-        system_prompt: inputData.system_prompt,
-        user_prompt: inputData.user_prompt,
-        inputs: JSON.parse(inputData.inputs),
+      const newSkill = {
+        title: skillData.title,
+        slug: skillData.slug,
+        description: skillData.description,
+        system_prompt: skillData.system_prompt,
+        user_prompt: skillData.user_prompt,
+        inputs: JSON.parse(skillData.inputs),
         user_id: user.id,
       };
 
-      const { data, error } = await supabase.from("skills").insert(skillData);
+      const { data, error } = await supabase.from("skills").insert(newSkill);
 
       if (error) {
         throw error;
@@ -40,10 +38,7 @@ export default function BuildPage() {
     }
   }
 
-  const [inputData, setInputData] = useState({});
-
-  const makeOnChange = (field) => (e) =>
-    setInputData({ ...inputData, [field]: e.target.value });
+  const [skillData, setSkillData] = useState({});
 
   return (
     <>
@@ -60,67 +55,11 @@ export default function BuildPage() {
             <div className="mx-auto mt-4 mb-4 max-w-xl text-center text-gray-500 sm:text-base">
               Create a shareable and reusable skill
             </div>
-            <form>
-              <TextInput
-                field="title"
-                placeholder="Email Generator"
-                label="Title"
-                required
-                value={inputData.title}
-                onChange={makeOnChange("title")}
-              />
-              <SlugInput
-                field="slug"
-                placeholder="email-generator"
-                label="URL Slug"
-                required
-                value={inputData.slug}
-                onChange={makeOnChange("slug")}
-              />
-              <TextArea
-                field="description"
-                placeholder="Enter a description here"
-                label="Description"
-                required
-                value={inputData.description}
-                onChange={makeOnChange("description")}
-              />
-              <TextArea
-                field="system_prompt"
-                placeholder="Enter a system prompt here"
-                label="System Prompt"
-                required
-                value={inputData.system_prompt}
-                onChange={makeOnChange("system_prompt")}
-                code
-              />
-              <TextArea
-                field="user_prompt"
-                placeholder="Enter a user prompt here"
-                label="User Prompt"
-                required
-                value={inputData.user_prompt}
-                onChange={makeOnChange("user_prompt")}
-                code
-              />
-              <TextArea
-                field="inputs"
-                placeholder="List the inputs here"
-                label="Input Fields"
-                required
-                value={inputData.inputs}
-                onChange={makeOnChange("inputs")}
-                code
-              />
-              <div className="mt-4">
-                <input
-                  type="submit"
-                  value="Create Skill"
-                  onClick={handleSubmit}
-                  className="rounded-md  bg-blue-500 py-2 px-3 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-600 active:bg-blue-700 dark:ring-0"
-                />
-              </div>
-            </form>
+            <EditSkillForm
+              skillData={skillData}
+              setSkillData={setSkillData}
+              onSubmit={handleSubmit}
+            />
           </div>
         </div>
       </div>
