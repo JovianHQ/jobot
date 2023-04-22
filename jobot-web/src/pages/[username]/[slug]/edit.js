@@ -40,7 +40,7 @@ export default function EditSkillPage({ skill }) {
       }
 
       toast.success("Skill updated successfully");
-      router.push(`/${skill.profiles.username}/${skill.slug}`);
+      router.push(`/${skill.profiles.username}/${updatedSkill.slug}`);
     } catch (error) {
       toast.error("Failed to update skill:" + error.message);
       console.error("Error updating skill:", error);
