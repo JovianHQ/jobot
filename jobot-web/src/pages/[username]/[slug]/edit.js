@@ -30,7 +30,7 @@ export default function EditSkillPage({ skill }) {
         user_id: user.id,
       };
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("skills")
         .update(updatedSkill)
         .eq("id", skillData.id);
@@ -39,7 +39,6 @@ export default function EditSkillPage({ skill }) {
         throw error;
       }
 
-      console.log("Skill updated successfully:", data);
       toast.success("Skill updated successfully");
       router.push(`/${skill.profiles.username}/${skill.slug}`);
     } catch (error) {

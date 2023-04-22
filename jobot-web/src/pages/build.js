@@ -1,13 +1,16 @@
 import { EditSkillForm } from "@/components/EditSkillForm";
 import Navbar from "@/components/Navbar";
+import { fetchUserProfile } from "@/network";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 
 export default function BuildPage() {
   const supabase = useSupabaseClient();
   const user = useUser();
+  const router = useRouter();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -15,6 +18,9 @@ export default function BuildPage() {
       toast.error("You must be logged in to build a skill");
       return;
     }
+
+    const userProfile = fetchUserProfile(supabase, user);
+
     try {
       const newSkill = {
         title: skillData.title,
@@ -26,13 +32,14 @@ export default function BuildPage() {
         user_id: user.id,
       };
 
-      const { data, error } = await supabase.from("skills").insert(newSkill);
+      const { error } = await supabase.from("skills").insert(newSkill);
 
       if (error) {
         throw error;
       }
 
-      console.log("Skill created successfully:", data);
+      toast.success("Skill created successfully");
+      router.push(`${userProfile.username}/${skillData.slug}`);
     } catch (error) {
       console.error("Error creating user:", error.message);
     }

@@ -7,7 +7,6 @@ export function makeDisplayName(profile) {
 }
 
 export function isJson(myVar) {
-  console.log(typeof myVar);
   if (typeof myVar === "object" && myVar !== null) {
     return true;
   } else {

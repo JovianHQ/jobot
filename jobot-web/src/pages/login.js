@@ -8,11 +8,9 @@ import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 async function ensureUserProfile(supabase, user, router) {
-  console.log("user", user);
   let userProfile = await fetchUserProfile(supabase, user);
-  console.log("userprofile", userProfile);
+
   if (!userProfile) {
-    console.log("Creating user profile");
     const email = user.email;
     const username = email.split("@")[0];
 
@@ -27,11 +25,9 @@ async function ensureUserProfile(supabase, user, router) {
         throw error;
       }
 
-      console.log("User profile created.");
-
       router.push("/account");
     } catch (e) {
-      console.log("Error while creating profile", e);
+      console.error("Error while creating profile", e);
       router.push("/");
     }
   } else {
@@ -47,7 +43,6 @@ export default function Login() {
   const supabase = useSupabaseClient();
 
   async function sendCode() {
-    console.log("email entered:", email);
     const { data, error } = await supabase.auth.signInWithOtp({
       email: email,
     });
@@ -59,7 +54,6 @@ export default function Login() {
     }
     if (data) {
       toast.success("Verification code send. Check your email!");
-      console.log("Verification code sent");
     }
   }
 
@@ -72,7 +66,6 @@ export default function Login() {
 
     if (data?.user) {
       toast.success("Signed in successfully");
-      console.log("Signed in succesfully", data);
       ensureUserProfile(supabase, data.user, router);
     }
 
@@ -87,7 +80,6 @@ export default function Login() {
 
       if (d2.user) {
         toast.success("Signed up successfully");
-        console.log("signed up sucessfully", d2);
         ensureUserProfile(supabase, d2.user, router);
       }
       if (e2) {

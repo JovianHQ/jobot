@@ -26,9 +26,9 @@ export function EditSkillForm({ skillData, setSkillData, onSubmit, editMode }) {
         value={skillData.slug}
         onChange={makeOnChange("slug")}
       />
-      <TextArea
+      <TextInput
         field="description"
-        placeholder="Enter a description here"
+        placeholder="Enter one-line a description here"
         label="Description"
         required
         value={skillData.description}
@@ -36,7 +36,7 @@ export function EditSkillForm({ skillData, setSkillData, onSubmit, editMode }) {
       />
       <TextArea
         field="system_prompt"
-        placeholder="Enter a system prompt here"
+        placeholder="Enter a system prompt with {{variables}} here"
         label="System Prompt"
         required
         value={skillData.system_prompt}
@@ -45,7 +45,7 @@ export function EditSkillForm({ skillData, setSkillData, onSubmit, editMode }) {
       />
       <TextArea
         field="user_prompt"
-        placeholder="Enter a user prompt here"
+        placeholder="Enter a user prompt with {{variables}} here"
         label="User Prompt"
         required
         value={skillData.user_prompt}
