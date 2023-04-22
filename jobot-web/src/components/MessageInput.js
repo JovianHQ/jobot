@@ -16,6 +16,7 @@ const MessageInput = ({
   const handleSendClick = () => {
     if (!prompt) {
       toast.error("Enter a message before you hit send.");
+      return;
     }
 
     sendMessages([{ role: "user", content: prompt }]).then(

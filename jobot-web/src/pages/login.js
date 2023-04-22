@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import { fetchUserProfile } from "@/network";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Head from "next/head";
 import Link from "next/link";
@@ -6,16 +7,42 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
+async function ensureUserProfile(supabase, user, router) {
+  let userProfile = await fetchUserProfile(supabase, user);
+
+  if (!userProfile) {
+    const email = user.email;
+    const username = email.split("@")[0];
+
+    try {
+      const { error } = await supabase.from("profiles").insert({
+        id: user.id,
+        username: username,
+        first_name: username,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      router.push("/account");
+    } catch (e) {
+      console.error("Error while creating profile", e);
+      router.push("/");
+    }
+  } else {
+    router.push("/");
+  }
+}
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
 
   const router = useRouter();
-
   const supabase = useSupabaseClient();
 
   async function sendCode() {
-    console.log("email entered:", email);
     const { data, error } = await supabase.auth.signInWithOtp({
       email: email,
     });
@@ -27,7 +54,6 @@ export default function Login() {
     }
     if (data) {
       toast.success("Verification code send. Check your email!");
-      console.log("Verification code sent");
     }
   }
 
@@ -40,8 +66,7 @@ export default function Login() {
 
     if (data?.user) {
       toast.success("Signed in successfully");
-      console.log("Signed in succesfully", data);
-      router.push("/");
+      ensureUserProfile(supabase, data.user, router);
     }
 
     if (error) {
@@ -55,8 +80,7 @@ export default function Login() {
 
       if (d2.user) {
         toast.success("Signed up successfully");
-        console.log("signed up sucessfully", d2);
-        router.push("/");
+        ensureUserProfile(supabase, d2.user, router);
       }
       if (e2) {
         toast.error("Failed to sign in / sign up");
