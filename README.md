@@ -107,6 +107,22 @@ Follow these steps to deploy your own copy of Jobot the Vercel:
 | avatar_url | No description  | character varying  | varchar |
 
 
+`skills` table:
+
+| Name          | Description                           | Data Type                 | Format      |
+|---------------|---------------------------------------|---------------------------|-------------|
+| id            | No description                        | bigint                    | int8        |
+| created_at    | No description                        | timestamp with time zone  | timestamptz |
+| updated_at    | No description                        | timestamp with time zone  | timestamptz |
+| user_id       | References the users's ID from auth.users | uuid                      | uuid        |
+| slug          | No description                        | character varying         | varchar     |
+| title         | No description                        | character varying         | varchar     |
+| description   | No description                        | character varying         | varchar     |
+| system_prompt | No description                        | character varying         | varchar     |
+| user_prompt   | No description                        | character varying         | varchar     |
+| inputs        | No description                        | jsonb                     | jsonb       |
+
+
 4. Sign up on [Vercel](https://vercel.com) and deploy Jobot's NextJS application
 
    - Follow [these instructions](https://vercel.com/docs/concepts/deployments/git#deploying-a-git-repository) and select `jobot-web` as the root directory
