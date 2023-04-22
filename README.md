@@ -72,21 +72,21 @@ Follow these steps to deploy your own copy of Jobot the Vercel:
    
    Confirm Signup:
    
-   ```
+```
 <h2>Confirm your signup</h2>
 
 <p>Enter this code to sign up:</p>
 <p>{{ .Token }}</p>
-
-   ```
+```
    
    Magic Link:
-   ```
+
+```
 <h2>Verification Code</h2>
 
 <p>Enter this verification code:</p>
 <p>{{ .Token }}</p>
-   ```
+```
 
 4. Sign up on [Vercel](https://vercel.com) and deploy Jobot's NextJS application
 
