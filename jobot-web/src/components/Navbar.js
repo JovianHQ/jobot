@@ -8,7 +8,7 @@ export default function Navbar() {
     <nav className="shadow px-2 z-40">
       <div className="flex w-full max-w-4xl py-3 items-center justify-between mx-auto">
         <div className="text-2xl font-medium text-gray-800 flex items-center">
-          <Link href="/" onClick={() => (window.location = "/")}>
+          <Link href="/">
             <Image
               src="/jobot_text_logo.png"
               height={32}
