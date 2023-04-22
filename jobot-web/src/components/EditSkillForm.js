@@ -2,6 +2,7 @@ import { isJson } from "@/utils";
 import SlugInput from "./inputs/SlugInput";
 import TextArea from "./inputs/TextArea";
 import TextInput from "./inputs/TextInput";
+import Link from "next/link";
 
 export function EditSkillForm({ skillData, setSkillData, onSubmit, editMode }) {
   const makeOnChange = (field) => (e) =>
@@ -53,8 +54,21 @@ export function EditSkillForm({ skillData, setSkillData, onSubmit, editMode }) {
       />
       <TextArea
         field="inputs"
-        placeholder="List the inputs here"
-        label="Input Fields"
+        placeholder="List the inputs here in JSON format"
+        label={
+          <span>
+            Input Fields (
+            <Link
+              href="https://gist.github.com/aakashns/60a32f4f05ff052fcd80b190492a1911"
+              target="_blank"
+              rel="noreferrer"
+              className="text-blue-500 hover:text-blue-600"
+            >
+              Example
+            </Link>
+            )
+          </span>
+        }
         required
         value={
           isJson(skillData.inputs)
