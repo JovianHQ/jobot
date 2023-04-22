@@ -49,3 +49,23 @@ export async function getTemplate(slug) {
 
   return template;
 }
+
+export async function fetchUserProfile(supabase, user) {
+  try {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    if (data) {
+      return data;
+    }
+  } catch (error) {
+    console.error("Error while fetch user profile", error);
+  }
+}

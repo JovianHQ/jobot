@@ -13,13 +13,24 @@ export default function Navbar() {
               src="/jobot_text_logo.png"
               height={32}
               width={117}
-              className="object-contain"
+              className="hidden md:block object-contain"
+              alt="logo"
+              unoptimized
+            />
+            <Image
+              src="/jobot_icon.png"
+              height={32}
+              width={32}
+              className="md:hidden object-contain"
               alt="logo"
               unoptimized
             />
           </Link>
         </div>
         <div>
+          <Link href="/" className="text-gray-500 hover:text-blue-600 ml-4">
+            Home
+          </Link>
           <Link
             href="/build"
             className="text-gray-500 hover:text-blue-600 ml-4"
@@ -36,10 +47,10 @@ export default function Navbar() {
           </Link>
           {user ? (
             <Link
-              href="/logout"
+              href="/account"
               className="text-gray-500 hover:text-blue-600 ml-4"
             >
-              Log Out
+              Account
             </Link>
           ) : (
             <Link
