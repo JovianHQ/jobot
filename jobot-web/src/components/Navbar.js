@@ -20,12 +20,32 @@ export default function Navbar() {
           </Link>
         </div>
         <div>
+          <Link
+            href="/build"
+            className="text-gray-500 hover:text-blue-600 ml-4"
+          >
+            Build
+          </Link>
+          <Link
+            href="https://github.com/jovianhq/jobot"
+            className="text-gray-500 hover:text-blue-600 ml-4"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Docs
+          </Link>
           {user ? (
-            <Link href="/logout" className="text-gray-500 hover:text-blue-600">
+            <Link
+              href="/logout"
+              className="text-gray-500 hover:text-blue-600 ml-4"
+            >
               Log Out
             </Link>
           ) : (
-            <Link href="/login" className="text-gray-500 hover:text-blue-600">
+            <Link
+              href="/login"
+              className="text-gray-500 hover:text-blue-600 ml-4"
+            >
               Log In
             </Link>
           )}

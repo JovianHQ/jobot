@@ -22,12 +22,6 @@ export default function Home() {
       <div className="flex flex-col h-screen">
         <Navbar />
 
-        {history.length > 1 && (
-          <>
-            <MessageHistory history={history} />
-            <MessageInput sendMessages={sendMessages} sending={sending} />
-          </>
-        )}
         {history.length <= 1 && (
           <div className="flex-1 overflow-y-auto ">
             <div className="mx-auto max-w-4xl overflow-y-auto w-full">
@@ -45,6 +39,14 @@ export default function Home() {
             <Templates />
           </div>
         )}
+
+        {history.length > 1 && (
+          <>
+            <MessageHistory history={history} />
+            <MessageInput sendMessages={sendMessages} sending={sending} />
+          </>
+        )}
+        
       </div>
     </>
   );
