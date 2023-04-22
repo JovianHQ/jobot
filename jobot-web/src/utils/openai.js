@@ -79,7 +79,8 @@ export async function postOpenAIMessages(messages) {
   });
 }
 
-const SYSTEM_MESSAGE = "You are Bojot, a joke generator for Jovian";
+const SYSTEM_MESSAGE =
+  "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs.";
 
 export default function useOpenAIMessages() {
   const [history, setHistory] = useState([
