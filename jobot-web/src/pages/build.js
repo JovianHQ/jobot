@@ -19,7 +19,7 @@ export default function BuildPage() {
       return;
     }
 
-    const userProfile = fetchUserProfile(supabase, user);
+    const userProfile = await fetchUserProfile(supabase, user);
 
     try {
       const newSkill = {
