@@ -96,6 +96,8 @@ Follow these steps to deploy your own copy of Jobot the Vercel:
 <img width="1228" alt="image" src="https://user-images.githubusercontent.com/1560745/233788449-588f9898-e00b-47ba-b4e2-063ea11687e2.png">
 
 
+`profiles` table:
+
 | Name       | Description     | Data Type          | Format  |
 |------------|-----------------|--------------------|---------|
 | id         | No description  | uuid               | uuid    |
