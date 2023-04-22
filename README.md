@@ -96,6 +96,14 @@ Follow these steps to deploy your own copy of Jobot the Vercel:
 <img width="1228" alt="image" src="https://user-images.githubusercontent.com/1560745/233788449-588f9898-e00b-47ba-b4e2-063ea11687e2.png">
 
 
+| Name       | Description     | Data Type          | Format  |
+|------------|-----------------|--------------------|---------|
+| id         | No description  | uuid               | uuid    |
+| username   | No description  | character varying  | varchar |
+| first_name | No description  | character varying  | varchar |
+| last_name  | No description  | character varying  | varchar |
+| avatar_url | No description  | character varying  | varchar |
+
 
 4. Sign up on [Vercel](https://vercel.com) and deploy Jobot's NextJS application
 
