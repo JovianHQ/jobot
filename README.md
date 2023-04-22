@@ -88,6 +88,15 @@ Follow these steps to deploy your own copy of Jobot the Vercel:
 <p>{{ .Token }}</p>
 ```
 
+3. Create 2 tables `skills` and `profiles` on the [Supabase Dashboard](https://app.supabase.com/project/_/database/tables) with the following columns:
+
+
+<img width="1083" alt="image" src="https://user-images.githubusercontent.com/1560745/233788441-18da5e96-2149-4a04-a311-4a93e8e4e1ae.png">
+
+<img width="1228" alt="image" src="https://user-images.githubusercontent.com/1560745/233788449-588f9898-e00b-47ba-b4e2-063ea11687e2.png">
+
+
+
 4. Sign up on [Vercel](https://vercel.com) and deploy Jobot's NextJS application
 
    - Follow [these instructions](https://vercel.com/docs/concepts/deployments/git#deploying-a-git-repository) and select `jobot-web` as the root directory
