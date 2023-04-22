@@ -80,19 +80,21 @@ export async function getServerSideProps(context) {
   const slug = context.params.slug;
   const username = context.params.username;
 
-  const { data: skill, error } = await supabase
+  const { data: skills, error } = await supabase
     .from("skills")
     .select("*,profiles(username, first_name, last_name)")
     .eq("slug", slug)
     .eq("profiles.username", username)
-    .single();
+    .limit(1);
 
-  if (error) {
+  if (error || !skills || skills.length == 0) {
     console.error("Failed to fetch skill for slug: " + slug, error);
     return {
       notFound: true,
     };
   }
+
+  const skill = skills[0];
 
   const {
     data: { user },
