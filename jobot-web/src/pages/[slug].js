@@ -3,21 +3,21 @@ import Navbar from "../components/Navbar";
 import useOpenAIMessages from "@/utils/openai";
 import MessageHistory from "@/components/MessageHistory";
 import MessageInput from "@/components/MessageInput";
-import { getTemplate } from "@/network";
-import Template from "@/components/Template";
+import SkillForm from "@/components/SkillForm";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
-export default function TemplatePage({ template }) {
+export default function SkillPage({ skill }) {
   const { history, sending, sendMessages } = useOpenAIMessages();
 
-  if (!template) {
+  if (!skill) {
     return null;
   }
 
   return (
     <>
       <Head>
-        <title>{template.title} - Jobot</title>
-        <meta name="description" content={template.description} />
+        <title>{skill.title} - Jobot</title>
+        <meta name="description" content={skill.description} />
         <link rel="icon" href="/jobot_icon.png" type="image/png" />
         <meta property="og:image" content="/jobot_meta.png" />
       </Head>
@@ -25,7 +25,7 @@ export default function TemplatePage({ template }) {
         <Navbar />
 
         {history.length === 1 && (
-          <Template template={template} sendMessages={sendMessages} />
+          <SkillForm skill={skill} sendMessages={sendMessages} />
         )}
 
         {history.length > 1 && (
@@ -40,9 +40,23 @@ export default function TemplatePage({ template }) {
 }
 
 export async function getServerSideProps(context) {
-  const template = await getTemplate(context.params.slug);
+  const supabase = createServerSupabaseClient(context);
+  const slug = context.params.slug;
+
+  const { data: skill, error } = await supabase
+    .from("skills")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error) {
+    console.error("Failed to fetch skill for slug: " + slug, error);
+    return {
+      notFound: true,
+    };
+  }
 
   return {
-    props: { template },
+    props: { skill },
   };
 }

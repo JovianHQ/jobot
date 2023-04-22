@@ -1,10 +1,19 @@
 import Navbar from "@/components/Navbar";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import classNames from "classnames";
 import Head from "next/head";
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 import TextAreaAutosize from "react-textarea-autosize";
 
-const TextInput = ({ field, placeholder, label, value, onChange }) => (
+const TextInput = ({
+  field,
+  placeholder,
+  label,
+  value,
+  onChange,
+  required,
+}) => (
   <div className="mt-4">
     <label
       htmlFor={field}
@@ -21,12 +30,21 @@ const TextInput = ({ field, placeholder, label, value, onChange }) => (
         placeholder={placeholder}
         value={value || ""}
         onChange={onChange}
+        required={required}
       />
     </div>
   </div>
 );
 
-const TextArea = ({ field, label, placeholder, value, onChange, code }) => (
+const TextArea = ({
+  field,
+  label,
+  placeholder,
+  value,
+  onChange,
+  code,
+  required,
+}) => (
   <div>
     <label
       htmlFor={field}
@@ -49,14 +67,43 @@ const TextArea = ({ field, label, placeholder, value, onChange, code }) => (
         placeholder={placeholder}
         value={value || ""}
         onChange={onChange}
+        required={required}
       />
     </div>
   </div>
 );
 
 export default function BuildPage() {
-  async function handleSubmit() {
-    console.log("Submit");
+  const supabase = useSupabaseClient();
+  const user = useUser();
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!user) {
+      toast.error("You must be logged in to build a skill");
+      return;
+    }
+    try {
+      const skillData = {
+        title: inputData.title,
+        slug: inputData.slug,
+        description: inputData.description,
+        system_prompt: inputData.system_prompt,
+        user_prompt: inputData.user_prompt,
+        inputs: JSON.parse(inputData.inputs),
+        user_id: user.id,
+      };
+
+      const { data, error } = await supabase.from("skills").insert(skillData);
+
+      if (error) {
+        throw error;
+      }
+
+      console.log("Skill created successfully:", data);
+    } catch (error) {
+      console.error("Error creating user:", error.message);
+    }
   }
 
   const [inputData, setInputData] = useState({});
@@ -84,6 +131,7 @@ export default function BuildPage() {
                 field="title"
                 placeholder="Email Generator"
                 label="Title"
+                required
                 value={inputData.title}
                 onChange={makeOnChange("title")}
               />
@@ -91,6 +139,7 @@ export default function BuildPage() {
                 field="slug"
                 placeholder="email-generator"
                 label="URL Slug"
+                required
                 value={inputData.slug}
                 onChange={makeOnChange("slug")}
               />
@@ -98,6 +147,7 @@ export default function BuildPage() {
                 field="description"
                 placeholder="Enter a description here"
                 label="Description"
+                required
                 value={inputData.description}
                 onChange={makeOnChange("description")}
               />
@@ -105,6 +155,7 @@ export default function BuildPage() {
                 field="system_prompt"
                 placeholder="Enter a system prompt here"
                 label="System Prompt"
+                required
                 value={inputData.system_prompt}
                 onChange={makeOnChange("system_prompt")}
                 code
@@ -113,6 +164,7 @@ export default function BuildPage() {
                 field="user_prompt"
                 placeholder="Enter a user prompt here"
                 label="User Prompt"
+                required
                 value={inputData.user_prompt}
                 onChange={makeOnChange("user_prompt")}
                 code
@@ -121,18 +173,18 @@ export default function BuildPage() {
                 field="inputs"
                 placeholder="List the inputs here"
                 label="Input Fields"
+                required
                 value={inputData.inputs}
                 onChange={makeOnChange("inputs")}
                 code
               />
               <div className="mt-4">
-                <button
-                  type="button"
+                <input
+                  type="submit"
+                  value="Create Skill"
                   onClick={handleSubmit}
                   className="rounded-md  bg-blue-500 py-2 px-3 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-600 active:bg-blue-700 dark:ring-0"
-                >
-                  Create Skill
-                </button>
+                />
               </div>
             </form>
           </div>

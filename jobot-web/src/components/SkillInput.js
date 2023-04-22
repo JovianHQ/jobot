@@ -1,6 +1,6 @@
 import classNames from "classnames";
 
-const TemplateInput = ({
+const SkillInput = ({
   field,
   title,
   placeholder,
@@ -90,4 +90,4 @@ const TemplateInput = ({
   }
 };
 
-export default TemplateInput;
+export default SkillInput;
