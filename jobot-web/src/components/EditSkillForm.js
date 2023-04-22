@@ -37,7 +37,20 @@ export function EditSkillForm({ skillData, setSkillData, onSubmit, editMode }) {
       <TextArea
         field="system_prompt"
         placeholder="Enter a system prompt with {{variables}} here"
-        label="System Prompt"
+        label={
+          <span>
+            System Prompt (
+            <Link
+              href="https://github.com/JovianHQ/jobot/tree/main/templates"
+              target="_blank"
+              rel="noreferrer"
+              className="text-blue-500 hover:text-blue-600"
+            >
+              Examples
+            </Link>
+            )
+          </span>
+        }
         required
         value={skillData.system_prompt}
         onChange={makeOnChange("system_prompt")}
