@@ -68,6 +68,26 @@ Follow these steps to deploy your own copy of Jobot the Vercel:
 
 3. Sign up on [Supabase](https://supabase.com) and set up a new project
 
+   - Change [Signup & Login Email Templates](https://jovian.com/learn/how-to-build-an-ai) for your project to the following:
+   
+   Confirm Signup:
+   
+   ```
+<h2>Confirm your signup</h2>
+
+<p>Enter this code to sign up:</p>
+<p>{{ .Token }}</p>
+
+   ```
+   
+   Magic Link:
+   ```
+<h2>Verification Code</h2>
+
+<p>Enter this verification code:</p>
+<p>{{ .Token }}</p>
+   ```
+
 4. Sign up on [Vercel](https://vercel.com) and deploy Jobot's NextJS application
 
    - Follow [these instructions](https://vercel.com/docs/concepts/deployments/git#deploying-a-git-repository) and select `jobot-web` as the root directory
