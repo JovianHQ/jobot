@@ -59,7 +59,7 @@ const SkillForm = ({ skill, sendMessages }) => {
         <button
           type="button"
           onClick={startConversation}
-          className="rounded-md  bg-blue-500 py-2 px-3 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-600 active:bg-blue-700 dark:ring-0"
+          className="rounded-md  bg-blue-500 py-2 px-3 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-600 active:bg-blue-700"
         >
           Start Conversation
         </button>

@@ -34,7 +34,7 @@ const MessageInput = ({
   return (
     <div className="px-2 pb-2">
       <div className="mx-auto w-full max-w-4xl">
-        <div className="flex items-end rounded-md border p-4 pr-2 dark:border-gray-400">
+        <div className="flex items-end rounded-md border p-4 pr-2">
           <TextArea
             ref={inputRef}
             minRows={1}
@@ -44,7 +44,7 @@ const MessageInput = ({
             placeholder={sending ? "Wait for my response.." : placeholder}
             className={cn(
               sending && "bg-gray-100 text-gray-400",
-              "w-full flex-1 resize-none self-center bg-transparent leading-tight focus:outline-none dark:border-gray-500"
+              "w-full flex-1 resize-none self-center bg-transparent leading-tight focus:outline-none"
             )}
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
