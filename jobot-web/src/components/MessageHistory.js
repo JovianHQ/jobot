@@ -17,7 +17,7 @@ const MessageHistory = ({ history }) => {
       ref={(el) => (messagesWindow.current = el)}
     >
       {history
-        .filter((message) => message.role !== "system")
+        // .filter((message) => message.role !== "system")
         .map((message, index) => (
           <Message key={index} {...message} />
         ))}
