@@ -2,7 +2,7 @@
 
 [![](https://i.imgur.com/1sPbh8y.png)](https://jobot.dev)
 
-This repository contains the source code for [Jobot](https://jobot.dev), a general purpose, programmable & extensible AI being developed by [Jovian](https://jovian.com), using state of the art machine learning models and APIs. Follow the development of Jobot here: https://howotobuildanai.com
+This repository contains the source code for [Jobot](https://jobot.dev), a general purpose, programmable & extensible AI being developed by [Jovian](https://jovian.com), using state of the art machine learning models and APIs. Follow the development of Jobot here: https://howtobuildanai.com
 
 ## Abilities
 
