@@ -16,7 +16,8 @@ const headers = {
 async function verifyAuth(req, res) {
   const supabase = createMiddlewareSupabaseClient({ req, res });
 
-  const authHeader = req.headers["Authorization"];
+  const authHeader = req.headers.get("authorization");
+  console.log("possible auth header", authHeader);
 
   if (authHeader) {
     const possibleKey = authHeader.substring(7);
@@ -40,8 +41,6 @@ async function verifyAuth(req, res) {
     data: { user },
     error: err1,
   } = await supabase.auth.getUser();
-
-  console.log("User", user);
 
   if (err1 || !user) {
     console.error("Failed to get current user", err1);
