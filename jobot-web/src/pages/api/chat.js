@@ -17,7 +17,6 @@ async function verifyAuth(req, res) {
   const supabase = createMiddlewareSupabaseClient({ req, res });
 
   const authHeader = req.headers.get("authorization");
-  console.log("possible auth header", authHeader);
 
   if (authHeader) {
     const possibleKey = authHeader.substring(7);
@@ -27,8 +26,6 @@ async function verifyAuth(req, res) {
       .select("*")
       .eq("key", possibleKey)
       .single();
-
-    console.log("API Key", apiKey);
 
     if (err2 || !apiKey) {
       console.error("Failed to validate API key", err2);
@@ -52,9 +49,7 @@ async function verifyAuth(req, res) {
 }
 
 async function handler(req, res) {
-  console.log("Got a new edge request");
   const authenticated = await verifyAuth(req, res);
-  console.log("is Authenticated", authenticated);
 
   if (!authenticated) {
     return new Response("Unauthorized", { status: 401 });
@@ -67,7 +62,15 @@ async function handler(req, res) {
     const stream = await OpenAIStream(body);
     return new Response(stream, { status: 200, headers });
   } else {
-    return new Response("Authenticated but not Implemented");
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+    return new Response(res, { status: 200, headers });
   }
 }
 
