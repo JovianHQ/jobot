@@ -27,12 +27,10 @@ async function verifyAuth(req, res) {
       .eq("key", possibleKey)
       .single();
 
-    if (apiKey) {
-      return true;
-    }
-
-    if (err2) {
+    if (err2 || !apiKey) {
       console.error("Failed to validate API key", err2);
+    } else {
+      return true;
     }
   }
 
@@ -41,12 +39,10 @@ async function verifyAuth(req, res) {
     error: err1,
   } = await supabase.auth.getUser();
 
-  if (user) {
-    return true;
-  }
-
-  if (err1) {
+  if (err1 || !user) {
     console.error("Failed to get current user", err1);
+  } else {
+    return true;
   }
 
   return false;

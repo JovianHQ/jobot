@@ -15,7 +15,7 @@ const Message = ({ role, content }) => {
         height={40}
         width={40}
         alt="Avatar"
-        className="self-start rounded-full"
+        className="self-start rounded-full border"
         unoptimized
       />
       <div className="flex-1 overflow-x-hidden pl-2">
