@@ -53,7 +53,9 @@ async function verifyAuth(req, res) {
 }
 
 async function handler(req, res) {
-  const authenticated = verifyAuth(req, res);
+  console.log("Got a new edge request");
+  const authenticated = await verifyAuth(req, res);
+  console.log("is Authenticated", authenticated);
 
   if (!authenticated) {
     return new Response("Unauthorized", { status: 401 });
