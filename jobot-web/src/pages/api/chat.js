@@ -5,24 +5,70 @@ export const config = {
   runtime: "edge",
 };
 
-async function handler(req, res) {
-  const supabase = createMiddlewareSupabaseClient({ req, res });
-  const body = await req.json();
+const headers = {
+  "Access-Control-Allow-Credentials": true,
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+  "Access-Control-Allow-Headers":
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-Referer, Authorization, API_URL",
+};
 
-  body.model = "gpt-3.5-turbo";
+async function verifyAuth(req, res) {
+  const supabase = createMiddlewareSupabaseClient({ req, res });
+
+  const authHeader = req.headers.get("authorization");
+  console.log("possible auth header", authHeader);
+
+  if (authHeader) {
+    const possibleKey = authHeader.substring(7);
+
+    const { data: apiKey, error: err2 } = await supabase
+      .from("apikeys")
+      .select("*")
+      .eq("key", possibleKey)
+      .single();
+
+    console.log("API Key", apiKey);
+
+    if (err2 || !apiKey) {
+      console.error("Failed to validate API key", err2);
+    } else {
+      return true;
+    }
+  }
 
   const {
     data: { user },
-    error,
+    error: err1,
   } = await supabase.auth.getUser();
 
-  if (!user || error) {
+  if (err1 || !user) {
+    console.error("Failed to get current user", err1);
+  } else {
+    return true;
+  }
+
+  return false;
+}
+
+async function handler(req, res) {
+  console.log("Got a new edge request");
+  const authenticated = await verifyAuth(req, res);
+  console.log("is Authenticated", authenticated);
+
+  if (!authenticated) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const stream = await OpenAIStream(body);
+  const body = await req.json();
+  body.model = "gpt-3.5-turbo";
 
-  return new Response(stream, { status: 200 });
+  if (body.stream) {
+    const stream = await OpenAIStream(body);
+    return new Response(stream, { status: 200, headers });
+  } else {
+    return new Response("Authenticated but not Implemented");
+  }
 }
 
 export default handler;
