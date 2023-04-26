@@ -1,33 +1,14 @@
+import ManageAPIKeys from "@/components/ManageAPIKeys";
 import Navbar from "@/components/Navbar";
 import SlugInput from "@/components/inputs/SlugInput";
 import TextArea from "@/components/inputs/TextArea";
 import TextInput from "@/components/inputs/TextInput";
-import { fetchUserProfile } from "@/network";
+import { fetchUserProfile, updateUserProfile } from "@/network";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
-
-async function updateUserProfile(supabase, profileData) {
-  try {
-    const { error } = await supabase
-      .from("profiles")
-      .update(profileData)
-      .eq("id", profileData.id);
-
-    if (error) {
-      throw error;
-    }
-
-    toast.success("Profile updated!");
-    return true;
-  } catch (e) {
-    toast.error("Failed to update profile");
-    console.error("Failed to update profile", e);
-  }
-}
 
 export default function AccountPage() {
   const router = useRouter();
@@ -111,6 +92,8 @@ export default function AccountPage() {
                 </Link>
               </div>
             </form>
+
+            <ManageAPIKeys />
           </div>
         </div>
       </div>
