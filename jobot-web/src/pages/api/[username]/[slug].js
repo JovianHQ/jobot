@@ -11,13 +11,10 @@ const SYSTEM_MESSAGE =
   "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs.";
 
 export default async function handler(req, res) {
-  const { searchParams } = new URL(req.url);
-  const slug = searchParams.get("slug");
-  const username = searchParams.get("username");
+  const url = new URL(req.url);
 
-  if (slug) {
-    return new Response(JSON.stringify({ slug, username }), { status: 200 });
-  }
+  const username = url.pathname.split("/")[2];
+  const slug = url.pathname.split("/")[3];
 
   const authenticated = await verifyServerSideAuth(req, res);
   const supabase = createMiddlewareSupabaseClient({ req, res });
