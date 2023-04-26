@@ -16,6 +16,26 @@ const headers = {
 async function verifyAuth(req, res) {
   const supabase = createMiddlewareSupabaseClient({ req, res });
 
+  const authHeader = req.headers["Authorization"];
+
+  if (authHeader) {
+    const possibleKey = authHeader.substring(7);
+
+    const { data: apiKey, error: err2 } = await supabase
+      .from("apikeys")
+      .select("*")
+      .eq("key", possibleKey)
+      .single();
+
+    if (apiKey) {
+      return true;
+    }
+
+    if (err2) {
+      console.error("Failed to validate API key", err2);
+    }
+  }
+
   const {
     data: { user },
     error: err1,
@@ -27,24 +47,6 @@ async function verifyAuth(req, res) {
 
   if (err1) {
     console.error("Failed to get current user", err1);
-  }
-
-  const authHeader = req.headers["Authorization"];
-
-  const possibleKey = authHeader.substring(7);
-
-  const { data: apiKey, error: err2 } = await supabase
-    .from("apikeys")
-    .select("*")
-    .eq("key", possibleKey)
-    .single();
-
-  if (apiKey) {
-    return true;
-  }
-
-  if (err2) {
-    console.error("Failed to validate API key", err2);
   }
 
   return false;
