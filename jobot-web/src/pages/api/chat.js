@@ -5,24 +5,67 @@ export const config = {
   runtime: "edge",
 };
 
-async function handler(req, res) {
-  const supabase = createMiddlewareSupabaseClient({ req, res });
-  const body = await req.json();
+const headers = {
+  "Access-Control-Allow-Credentials": true,
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+  "Access-Control-Allow-Headers":
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-Referer, Authorization, API_URL",
+};
 
-  body.model = "gpt-3.5-turbo";
+async function verifyAuth(req, res) {
+  const supabase = createMiddlewareSupabaseClient({ req, res });
 
   const {
     data: { user },
-    error,
+    error: err1,
   } = await supabase.auth.getUser();
 
-  if (!user || error) {
+  if (user) {
+    return true;
+  }
+
+  if (err1) {
+    console.error("Failed to get current user", err1);
+  }
+
+  const authHeader = req.headers["Authorization"];
+
+  const possibleKey = authHeader.substring(7);
+
+  const { data: apiKey, error: err2 } = await supabase
+    .from("apikeys")
+    .select("*")
+    .eq("key", possibleKey)
+    .single();
+
+  if (apiKey) {
+    return true;
+  }
+
+  if (err2) {
+    console.error("Failed to validate API key", err2);
+  }
+
+  return false;
+}
+
+async function handler(req, res) {
+  const authenticated = verifyAuth(req, res);
+
+  if (!authenticated) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const stream = await OpenAIStream(body);
+  const body = await req.json();
+  body.model = "gpt-3.5-turbo";
 
-  return new Response(stream, { status: 200 });
+  if (body.stream) {
+    const stream = await OpenAIStream(body);
+    return new Response(stream, { status: 200, headers });
+  } else {
+    return new Response("Authenticated but not Implemented");
+  }
 }
 
 export default handler;
