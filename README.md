@@ -23,7 +23,7 @@ Users will also be able to create and publish their own skills ([see examples](h
 Jobot is (or will be) accessible to users in the following ways:
 
 - ✅ Web Application
-- ⬜️ REST API
+- ✅ REST API
 - ⬜️ Discord Bot
 - ⬜️ Slack Bot
 - ⬜️ WhatsApp Bot
@@ -57,6 +57,58 @@ Jobot is completely open-source and we welcome all forms of contributions from t
 - To show your love for the project, [star this repository](https://github.com/JovianHQ/jobot)
 - Ask a question or provide suggestions by [starting a discussion](https://jovian.com/learn/how-to-build-an-ai/discussions)
 - Blog or tweet about the project to help spread the word
+
+## API Access
+
+Apart from the web app, you can interact with Jobot via a REST API. The following endpoints are supported:
+
+
+1. `GET https://jobot.jovian.com/api/skills` (unauthenticated): Provides a list of all available skills as JSON
+
+2. `GET https://jobot.jovian.com/api/:username/skills` (uauthneticated): Provides a list of skills provided by a user as JSON
+
+3. `POST https://jobot.jovian.com/api/chat` (authenticated): Use it to send messages to the ChatGPT API
+
+  - Authentication Headers: Create an API key at [https://jobot.jovian.com/account](https://jobot.jovian.com/account) and include it as an `"Authorization"` header with value `"Bearer API_KEY"`
+
+  - Request Body: (similar to [OpenAI chat completions](https://platform.openai.com/docs/api-reference/chat/create))
+
+```json
+{
+  "model": "gpt-3.5-turbo",
+  "messages": [{"role": "user", "content": "Hello!"}]
+}
+
+
+```
+
+  - Response Body (similar to [OpenAI chat completions](https://platform.openai.com/docs/api-reference/chat/create)): 
+
+```json
+{
+  "id": "chatcmpl-123",
+  "object": "chat.completion",
+  "created": 1677652288,
+  "choices": [{
+    "index": 0,
+    "message": {
+      "role": "assistant",
+      "content": "\n\nHello there, how may I assist you today?",
+    },
+    "finish_reason": "stop"
+  }],
+  "usage": {
+    "prompt_tokens": 9,
+    "completion_tokens": 12,
+    "total_tokens": 21
+  }
+}
+```
+
+3. `POST https://jobot.jovian.com/api/:username/:skill` (authenticated - coming soon): Use it to send messages to a specific skill
+
+
+
 
 ## Deployment
 
