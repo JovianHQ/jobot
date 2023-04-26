@@ -15,7 +15,9 @@ export default async function handler(req, res) {
   const slug = searchParams.get("slug");
   const username = searchParams.get("username");
 
-  return new Response(JSON.stringify({ slug, username }), { status: 200 });
+  if (slug) {
+    return new Response(JSON.stringify({ slug, username }), { status: 200 });
+  }
 
   const authenticated = await verifyServerSideAuth(req, res);
   const supabase = createMiddlewareSupabaseClient({ req, res });
