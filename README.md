@@ -105,8 +105,62 @@ Apart from the web app, you can interact with Jobot via a REST API. The followin
 }
 ```
 
-3. `POST https://jobot.jovian.com/api/:username/:skill` (authenticated - coming soon): Use it to send messages to a specific skill
+3. `GET https://jobot.jovian.com/api/:username/:skill` (authenticated): Use it to get the details for
+a specific skill
 
+  - Authentication Headers: Create an API key at [https://jobot.jovian.com/account](https://jobot.jovian.com/account) and include it as an `"Authorization"` header with value `"Bearer API_KEY"`
+
+
+4. `POST https://jobot.jovian.com/api/:username/:skill` (authenticated): Use it to send input data and messages to a specific skill
+
+  - - Authentication Headers: Create an API key at [https://jobot.jovian.com/account](https://jobot.jovian.com/account) and include it as an `"Authorization"` header with value `"Bearer API_KEY"`
+
+  - Request Body: (similar to [OpenAI chat completions](https://platform.openai.com/docs/api-reference/chat/create) but can include an `inputData` key for initial inputs that are used to create system and user prompt)
+
+```json
+{
+	"inputData": {
+		"topic": "NextJS",
+		"difficulty": "Medium"
+	},
+	"messages": [
+		{
+				"role": "assistant",
+				"content": "What is the purpose of the `_app.js` file in a Next.js project?\n\na) It is used for server-side rendering of the entire application\nb) It is used to customize the `App` component used by Next.js\nc) It is used to configure the routing of the Next.js application\nd) It is used to define the endpoints of the application's API\n\nPlease answer with the corresponding letter of the correct option."
+		},
+		{
+			"role": "user",
+			"content": "D. Who are you?"
+		}
+	]
+}
+```
+
+  - Response Body (similar to [OpenAI chat completions](https://platform.openai.com/docs/api-reference/chat/create)): 
+
+```json
+{
+	"id": "chatcmpl-79anDx2EENOfDIFmieHWkaJwR7Bwu",
+	"object": "chat.completion",
+	"created": 1682520739,
+	"model": "gpt-3.5-turbo-0301",
+	"usage": {
+		"prompt_tokens": 327,
+		"completion_tokens": 33,
+		"total_tokens": 360
+	},
+	"choices": [
+		{
+			"message": {
+				"role": "assistant",
+				"content": "I am Jobot, an AI assistant created by Jovian. My purpose is to help users test their understanding of a topic by asking them multiple choice questions."
+			},
+			"finish_reason": "stop",
+			"index": 0
+		}
+	]
+}
+```
 
 
 
