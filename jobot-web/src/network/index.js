@@ -1,3 +1,4 @@
+import { createMiddlewareSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { toast } from "react-hot-toast";
 
 export const TEMPLATES_BASE_URL =
@@ -92,4 +93,49 @@ export async function updateUserProfile(supabase, profileData) {
     toast.error("Failed to update profile");
     console.error("Failed to update profile", e);
   }
+}
+
+export async function verifyServerSideAuth(req, res) {
+  const supabase = createMiddlewareSupabaseClient({ req, res });
+
+  const authHeader = req.headers.get("authorization");
+
+  if (authHeader) {
+    const possibleKey = authHeader.substring(7);
+
+    const { data: apiKey, error: err2 } = await supabase
+      .from("apikeys")
+      .select("*")
+      .eq("key", possibleKey)
+      .single();
+
+    if (err2 || !apiKey) {
+      console.error("Failed to validate API key", err2);
+    } else {
+      return true;
+    }
+  }
+
+  const {
+    data: { user },
+    error: err1,
+  } = await supabase.auth.getUser();
+
+  if (err1 || !user) {
+    console.error("Failed to get current user", err1);
+  } else {
+    return true;
+  }
+
+  return false;
+}
+
+export function getChatResponseHeaders() {
+  return {
+    "Access-Control-Allow-Credentials": true,
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+    "Access-Control-Allow-Headers":
+      "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-Referer, Authorization, API_URL",
+  };
 }
