@@ -70,7 +70,9 @@ async function handler(req, res) {
       method: "POST",
       body: JSON.stringify(body),
     });
-    return new Response(res, { status: 200, headers });
+    const resText = await res.text();
+    headers["Content-Type"] = "application/json";
+    return new Response(resText, { status: 200, headers });
   }
 }
 
