@@ -17,6 +17,7 @@ export default async function handler(req, res) {
 
   const authenticated = await verifyServerSideAuth(req, res);
   const supabase = createMiddlewareSupabaseClient({ req, res });
+  const headers = getChatResponseHeaders();
 
   if (!authenticated) {
     return new Response("Unauthorized", { status: 401 });
@@ -30,12 +31,10 @@ export default async function handler(req, res) {
     .limit(1);
 
   if (error || skills?.length < 1) {
-    res.status(404).send("Skill not found");
+    return new Response("Skill not found", { status: 404, headers });
   }
 
   const skill = skills[0];
-
-  const headers = getChatResponseHeaders();
 
   if (req.method === "GET") {
     headers["content-type"] = "application/json";
@@ -46,8 +45,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method !== "POST") {
-    res.status(405).send("Method not supported");
-    return;
+    return new Response("Method not supported", { status: 405, headers });
   }
 
   const body = await req.json();
