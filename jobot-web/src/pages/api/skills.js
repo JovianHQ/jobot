@@ -13,6 +13,7 @@ export default async function handler(req, res) {
 
   if (error) {
     res.status(404).json({ error: error });
+    return;
   }
 
   res.status(200).json({ skills });
