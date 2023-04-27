@@ -84,7 +84,7 @@ export default async function handler(req, res) {
     .single();
 
   if (error4) {
-    return new Response("Failed to create API key. " + error3.message, {
+    return new Response("Failed to retrieve API key. " + error3.message, {
       status: 500,
       headers,
     });
