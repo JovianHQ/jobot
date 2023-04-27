@@ -47,9 +47,17 @@ export default async function handler(req, res) {
       });
     }
 
-    user = data2.user;
+    user = data2?.user;
   } else {
-    user = data1.user;
+    user = data1?.user;
+  }
+
+  if (!user) {
+    console.error("unable to retrieve user");
+    return new Response("Unable to retrieve user", {
+      status: 400,
+      headers,
+    });
   }
 
   const keyName = "API Key - " + new Date().toString();
