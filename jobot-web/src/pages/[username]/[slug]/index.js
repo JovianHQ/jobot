@@ -16,7 +16,7 @@ export default function SkillPage({ skill }) {
   return (
     <>
       <Head>
-        <title>{skill.title} - Jobot</title>
+        <title>{`${skill.title} - Jobot`}</title>
         <meta name="description" content={skill.description} />
         <link rel="icon" href="/jobot_icon.png" type="image/png" />
         <meta property="og:image" content="/jobot_meta.png" />

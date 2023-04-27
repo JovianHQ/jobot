@@ -2,6 +2,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { createParser } from "eventsource-parser";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { useLoginDialog } from ".";
 
 export const OpenAIStream = async (body) => {
   const encoder = new TextEncoder();
@@ -83,6 +84,7 @@ const SYSTEM_MESSAGE =
   "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs.";
 
 export default function useOpenAIMessages() {
+  const { setLoginOpen } = useLoginDialog();
   const [history, setHistory] = useState([
     { role: "system", content: SYSTEM_MESSAGE },
   ]);
@@ -91,7 +93,8 @@ export default function useOpenAIMessages() {
 
   const sendMessages = async (newMessages) => {
     if (!user) {
-      toast.error("You must be logged in to send a message");
+      toast("Please log in to send a message");
+      setLoginOpen(true);
       return;
     }
 
