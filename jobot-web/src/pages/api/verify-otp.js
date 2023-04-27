@@ -29,6 +29,10 @@ export default async function handler(req, res) {
   });
 
   if (error1) {
+    console.error(
+      "Magic link OTP verification failed for " + body.email,
+      error1
+    );
     const { data: data2, error: error2 } = await supabase.auth.verifyOtp({
       email: body.email,
       token: body.code,
@@ -36,7 +40,11 @@ export default async function handler(req, res) {
     });
 
     if (error2) {
-      return new Response("Failed to log in", { status: 500, headers });
+      console.error("Signup OTP verification failed for " + body.email, error2);
+      return new Response("Failed to log in." + error2.message, {
+        status: 400,
+        headers,
+      });
     }
 
     user = data2.user;
