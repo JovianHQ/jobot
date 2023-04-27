@@ -1,3 +1,4 @@
+import { getChatResponseHeaders } from "@/network";
 import { createMiddlewareSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 export const config = {
@@ -5,6 +6,10 @@ export const config = {
 };
 
 export default async function handler(req, res) {
+  const headers = getChatResponseHeaders();
+  if (req.method !== "POST") {
+    return new Response("Method not supported", { status: 405, headers });
+  }
   const body = await req.json();
 
   if (!body || !body.email || !body.code) {
@@ -31,7 +36,7 @@ export default async function handler(req, res) {
     });
 
     if (error2) {
-      return new Response("Failed to log in", { status: 500 });
+      return new Response("Failed to log in", { status: 500, headers });
     }
 
     user = data2.user;
@@ -51,6 +56,7 @@ export default async function handler(req, res) {
   if (error3) {
     return new Response("Failed to create API key. " + error3.message, {
       status: 500,
+      headers,
     });
   }
 
@@ -64,8 +70,13 @@ export default async function handler(req, res) {
   if (error4) {
     return new Response("Failed to create API key. " + error3.message, {
       status: 500,
+      headers,
     });
   }
 
-  return new Response(JSON.stringify({ apiKey: data }), { status: 200 });
+  headers["Content-Type"] = "application/json";
+  return new Response(JSON.stringify({ apiKey: data }), {
+    status: 200,
+    headers,
+  });
 }
