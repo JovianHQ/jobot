@@ -1,5 +1,6 @@
 import { createMiddlewareSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { toast } from "react-hot-toast";
+import { createClient } from "@supabase/supabase-js";
 
 export const TEMPLATES_BASE_URL =
   "https://raw.githubusercontent.com/JovianHQ/jobot/main/templates";
@@ -96,14 +97,16 @@ export async function updateUserProfile(supabase, profileData) {
 }
 
 export async function verifyServerSideAuth(req, res) {
-  const supabase = createMiddlewareSupabaseClient({ req, res });
-
   const authHeader = req.headers.get("authorization");
 
   if (authHeader) {
+    const supabaseService = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    );
     const possibleKey = authHeader.substring(7);
 
-    const { data: apiKey, error: err2 } = await supabase
+    const { data: apiKey, error: err2 } = await supabaseService
       .from("apikeys")
       .select("*")
       .eq("key", possibleKey)
@@ -115,6 +118,8 @@ export async function verifyServerSideAuth(req, res) {
       return true;
     }
   }
+
+  const supabase = createMiddlewareSupabaseClient({ req, res });
 
   const {
     data: { user },
