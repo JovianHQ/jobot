@@ -1,6 +1,7 @@
 import { EditSkillForm } from "@/components/EditSkillForm";
 import Navbar from "@/components/Navbar";
 import { fetchUserProfile } from "@/network";
+import { useLoginDialog } from "@/utils";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -11,11 +12,13 @@ export default function BuildPage() {
   const supabase = useSupabaseClient();
   const user = useUser();
   const router = useRouter();
+  const { setLoginOpen } = useLoginDialog();
 
   async function handleSubmit(e) {
     e.preventDefault();
     if (!user) {
-      toast.error("You must be logged in to build a skill");
+      toast("Please log in to send a message");
+      setLoginOpen(true);
       return;
     }
 

@@ -139,3 +139,78 @@ export function getChatResponseHeaders() {
       "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-Referer, Authorization, API_URL",
   };
 }
+
+export async function ensureUserProfile(supabase, user) {
+  let userProfile = await fetchUserProfile(supabase, user);
+
+  if (!userProfile) {
+    const email = user.email;
+    const username = email.split("@")[0];
+
+    try {
+      const { error } = await supabase.from("profiles").insert({
+        id: user.id,
+        username: username,
+        first_name: username,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      return true;
+    } catch (e) {
+      console.error("Error while creating profile", e);
+      return false;
+    }
+  } else {
+    return true;
+  }
+}
+
+export async function sendVerificationCode(supabase, email) {
+  const { data, error } = await supabase.auth.signInWithOtp({
+    email: email,
+  });
+
+  if (error) {
+    toast.error("Failed to send verfication code");
+    console.error("Failed to send verification code", error);
+    return;
+  }
+  if (data) {
+    toast.success("Verification code send. Check your email!");
+  }
+}
+
+export async function submitVerificationCode(supabase, email, code) {
+  const { data, error } = await supabase.auth.verifyOtp({
+    email: email,
+    token: code,
+    type: "magiclink",
+  });
+
+  if (data?.user) {
+    toast.success("Signed in successfully");
+    return ensureUserProfile(supabase, data.user);
+  }
+
+  if (error) {
+    console.error("Failed to sign in", error);
+
+    const { data: d2, error: e2 } = await supabase.auth.verifyOtp({
+      email: email,
+      token: code,
+      type: "signup",
+    });
+
+    if (d2.user) {
+      toast.success("Signed up successfully");
+      return ensureUserProfile(supabase, d2.user);
+    }
+    if (e2) {
+      toast.error("Failed to sign in / sign up");
+      console.error("sign up failed", e2);
+    }
+  }
+}
