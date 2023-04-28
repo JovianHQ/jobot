@@ -20,8 +20,6 @@ export default async function handler(req, res) {
 
   const supabase = createMiddlewareSupabaseClient({ req, res });
 
-  let user;
-
   const { data: data1, error: error1 } = await supabase.auth.verifyOtp({
     email: body.email,
     token: body.code,
@@ -29,30 +27,39 @@ export default async function handler(req, res) {
   });
 
   if (error1) {
-    console.error(
-      "Magic link OTP verification failed for " + body.email,
-      error1
-    );
-    const { data: data2, error: error2 } = await supabase.auth.verifyOtp({
-      email: body.email,
-      token: body.code,
-      type: "signup",
-    });
-
-    if (error2) {
-      console.error("Signup OTP verification failed for " + body.email, error2);
-      return new Response("Failed to log in." + error2.message, {
-        status: 400,
-        headers,
-      });
-    }
-
-    user = data2?.user;
-  } else {
-    user = data1?.user;
+    console.error("Failed to verify code", error1);
+    return new Response("Failed to verify code");
   }
 
-  return new Response(JSON.stringify({ user }), { headers, status: 200 });
+  return new Response(JSON.stringify({ data1 }), { headers, status: 200 });
+
+  // let user;
+
+  // if (error1) {
+  //   console.error(
+  //     "Magic link OTP verification failed for " + body.email,
+  //     error1
+  //   );
+  //   const { data: data2, error: error2 } = await supabase.auth.verifyOtp({
+  //     email: body.email,
+  //     token: body.code,
+  //     type: "signup",
+  //   });
+
+  //   if (error2) {
+  //     console.error("Signup OTP verification failed for " + body.email, error2);
+  //     return new Response("Failed to log in." + error2.message, {
+  //       status: 400,
+  //       headers,
+  //     });
+  //   }
+
+  //   user = data2?.user;
+  // } else {
+  //   user = data1?.user;
+  // }
+
+  // return new Response(JSON.stringify({ user }), { headers, status: 200 });
 
   // if (!user) {
   //   console.error("unable to retrieve user");
