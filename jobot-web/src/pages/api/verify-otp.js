@@ -28,7 +28,7 @@ export default async function handler(req, res) {
 
   if (error1) {
     console.error("Failed to verify code", error1);
-    return new Response("Failed to verify code");
+    return new Response("Failed to verify code. " + error1.message);
   }
 
   return new Response(JSON.stringify({ data1 }), { headers, status: 200 });
