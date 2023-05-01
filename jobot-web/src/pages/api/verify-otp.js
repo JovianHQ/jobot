@@ -1,16 +1,13 @@
 import { getChatResponseHeaders } from "@/network";
-import { createMiddlewareSupabaseClient } from "@supabase/auth-helpers-nextjs";
-
-export const config = {
-  runtime: "edge",
-};
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 export default async function handler(req, res) {
   const headers = getChatResponseHeaders();
   if (req.method !== "POST") {
+    res.status(405).send("Method not supported");
     return new Response("Method not supported", { status: 405, headers });
   }
-  const body = await req.json();
+  const body = await req.body;
 
   if (!body || !body.email || !body.code) {
     return new Response("The fields `email` and `code` are required", {
@@ -18,7 +15,7 @@ export default async function handler(req, res) {
     });
   }
 
-  const supabase = createMiddlewareSupabaseClient({ req, res });
+  const supabase = createServerSupabaseClient({ req, res });
 
   const { data: data1, error: error1 } = await supabase.auth.verifyOtp({
     email: body.email,
