@@ -319,7 +319,71 @@ This endpoint creates a new conversation for a particular user. The request body
 
 ### Update Conversation
 
-TODO
+Use this to add new messages to an existing conversation.
+
+**Endpoint:** https://jobot.jovian.com/api/conversations/:conversation
+
+**Method**: GET
+
+**Headers**:
+
+- `"Authorization" : "Bearer USER_API_KEY"`
+- `"Content-Type" : "application/json"`
+
+
+**Sample Request**:
+
+```json
+POST /api/conversations/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+    "messages": [
+        {
+            "role": "user",
+            "content": "Hello again!"
+        }
+    ]
+}
+```
+
+
+**Sample Response**:
+
+```json
+{
+  "data": {
+    "created_at": "2023-05-03T11:07:04.447375+00:00",
+    "user_id": "b3079791-9e64-4344-9049-f8de47a0f0e7",
+    "title": "What is FreeCodeCamp?",
+    "id": "db245948-4010-4104-afba-bbe5f3514a73",
+    "messages": [
+      {
+        "id": "c0318588-0e60-45c8-9996-acfdbf359dc1",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "system",
+        "content": "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs."
+      },
+      {
+        "id": "ab33a56c-4672-46ae-85cf-c22bc337a26f",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "user",
+        "content": "What is FreeCodeCamp?"
+      },
+      {
+        "id": "c806fa20-3964-40b9-b422-0852b6a2a3c1",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "assistant",
+        "content": "FreeCodeCamp is a non-profit organization that offers free coding courses to anyone interested in learning web development."
+      }
+    ]
+  }
+}
+```
+
+
+
 
 ### Retrieve Skills
 
