@@ -1,0 +1,9 @@
+POST http://localhost:3000/api/conversations/00baf03f-88ea-4047-8591-53f56444549f
+content-type: application/json
+
+{
+  "messages": [
+    {"role": "assistant", "content": "My name is Jobot"},
+    {"role": "user", "content": "What can you do for me?"}
+  ]
+}
