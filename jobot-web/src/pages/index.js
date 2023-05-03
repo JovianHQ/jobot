@@ -10,7 +10,7 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
 
 export default function Home() {
-  const { history, sending, setHistory, sendMessages } = useOpenAIMessages();
+  const { history, sending, sendMessages } = useOpenAIMessages();
   const supabase = useSupabaseClient();
   const user = useUser();
   const router = useRouter();
