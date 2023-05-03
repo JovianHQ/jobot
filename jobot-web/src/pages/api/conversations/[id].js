@@ -23,7 +23,7 @@ async function getConversation(supabase, user, req, res) {
 
   const { data, error } = await supabase
     .from("conversations")
-    .select("*, messages (*)")
+    .select("*, messages (id, created_at, role, content)")
     .eq("id", id)
     .single();
 
@@ -58,7 +58,9 @@ async function updateConversation(supabase, user, req, res) {
   }
 
   if (error) {
-    res.status(400).json({ message: "Conversation not found. " + error.message });
+    res
+      .status(400)
+      .json({ message: "Conversation not found. " + error.message });
   }
 
   const { error: messagesError } = await supabase
