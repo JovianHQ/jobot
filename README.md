@@ -10,9 +10,11 @@ Jobot has (or will soon have) the following abilities:
 
 - ✅ Intelligence (powered by GPT-3.5/4)
 - ✅ Skills (preconfigured prompts)
+- ⬜️ Memory 
+  - ✅ Conversations (database)
+  - ⬜️ Knowledge Base (embeddings)
 - ⬜️ Hearing (powered by Whisper)
 - ⬜️ Speech (powered by Neural2)
-- ⬜️ Memory (powered by Databases/Embeddings)
 - ⬜️ Creativitiy (powered by DALL-E 2)
 - ⬜️ Vision (powered by GPT-4)
 
