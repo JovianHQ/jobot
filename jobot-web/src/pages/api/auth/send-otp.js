@@ -21,7 +21,7 @@ export default async function handler(req, res) {
 
   const supabase = createServerSupabaseClient({ req, res });
 
-  const { error } = await supabase.auth.signInWithOtp({ email });
+  const { error } = await supabase.auth.signInWithOtp({ email, phone });
 
   if (error) {
     res
