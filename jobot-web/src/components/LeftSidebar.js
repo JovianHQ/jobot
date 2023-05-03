@@ -92,7 +92,6 @@ const LeftSidebar = () => {
                 "bg-gray-100 font-semibold text-gray-600"
             )}
             href={`/conversations/${conversation.id}`}
-            shallow
           >
             <ChatIcon size={20} className="inline flex-shrink-0" />
             <div className="truncate">&nbsp;&nbsp;{conversation.title}</div>

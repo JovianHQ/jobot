@@ -1,30 +1,14 @@
 import Layout from "@/components/Layout";
-import LeftSidebar from "@/components/LeftSidebar";
 import MessageHistory from "@/components/MessageHistory";
 import MessageInput from "@/components/MessageInput";
 import Navbar from "@/components/Navbar";
 import useOpenAIMessages from "@/utils/openai";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { toast } from "react-hot-toast";
-
-async function fetchConversationMessages(supabase, user, id) {
-  const { data, error } = await supabase
-    .from("messages")
-    .select("*")
-    .eq("conversation_id", id);
-
-  if (error) {
-    toast.error("Failed to retrieve conversation messages. " + error.message);
-    console.error("Failed to retrieve conversation messages", error);
-    return null;
-  }
-
-  return data;
-}
 
 export default function ConversationPage({ conversation }) {
   const router = useRouter();
@@ -34,6 +18,10 @@ export default function ConversationPage({ conversation }) {
   const { history, setHistory, sending, sendMessages } = useOpenAIMessages(
     conversation.messages
   );
+
+  useEffect(() => {
+    setHistory(conversation.messages);
+  }, [conversation, setHistory]);
 
   async function handleSend(newMessages) {
     const newHistory = await sendMessages(newMessages);
