@@ -275,7 +275,14 @@ This endpoint creates a new conversation for a particular user. The request body
 
 ### Retrieve Conversation Messages
 
-https://jobot.jovian.com/api/conversations/:conversation
+**Endpoint:** https://jobot.jovian.com/api/conversations/:conversation
+
+**Method**: GET
+
+**Headers**:
+
+- `"Authorization" : "Bearer USER_API_KEY"`
+
 
 **Sample Response**:
 
