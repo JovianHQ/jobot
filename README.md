@@ -10,9 +10,11 @@ Jobot has (or will soon have) the following abilities:
 
 - ✅ Intelligence (powered by GPT-3.5/4)
 - ✅ Skills (preconfigured prompts)
+- ⬜️ Memory 
+  - ✅ Conversations (database)
+  - ⬜️ Knowledge Base (embeddings)
 - ⬜️ Hearing (powered by Whisper)
 - ⬜️ Speech (powered by Neural2)
-- ⬜️ Memory (powered by Databases/Embeddings)
 - ⬜️ Creativitiy (powered by DALL-E 2)
 - ⬜️ Vision (powered by GPT-4)
 
@@ -124,7 +126,7 @@ Use this to send messages to the ChatGPT API and get back a response. Include an
 **Request:**
 
 ```
-POST /chat
+POST https://jobot.jovian.com/api/chat
 Content-Type: application/json
 Authorization: Bearer API_KEY
 
@@ -228,12 +230,12 @@ This endpoint creates a new conversation for a particular user. The request body
 {
   "messages": [
     {
-      "role": 0,
-      "content": "Hey"
+      "role": "system",
+      "content": "You are Jobot, a helpful assistant developed by Jovian"
     },
     {
-      "role": 1,
-      "content": "Hello"
+      "role": "user",
+      "content": "Hello, who are you?"
     }
   ],
   "title": "Sample Conversation Title"
