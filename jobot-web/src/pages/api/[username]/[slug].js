@@ -16,8 +16,9 @@ export default async function handler(req, res) {
   const username = url.pathname.split("/")[2];
   const slug = url.pathname.split("/")[3];
 
-  const authenticated = await verifyServerSideAuth(req, res);
   const supabase = createMiddlewareSupabaseClient({ req, res });
+  const authenticated = await verifyServerSideAuth(supabase, req.headers);
+
   const headers = getChatResponseHeaders();
 
   if (!authenticated) {

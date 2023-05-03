@@ -83,11 +83,11 @@ export async function postOpenAIMessages(messages) {
 const SYSTEM_MESSAGE =
   "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs.";
 
-export default function useOpenAIMessages() {
+const DEFAULT_HISTORY = [{ role: "system", content: SYSTEM_MESSAGE }];
+
+export default function useOpenAIMessages(initialHistory = DEFAULT_HISTORY) {
   const { setLoginOpen } = useLoginDialog();
-  const [history, setHistory] = useState([
-    { role: "system", content: SYSTEM_MESSAGE },
-  ]);
+  const [history, setHistory] = useState(initialHistory);
   const [sending, setSending] = useState(false);
   const user = useUser();
 
@@ -111,13 +111,15 @@ export default function useOpenAIMessages() {
       toast.error("Failed to send:" + response.statusText);
     }
 
+    let finalHistory;
     await streamOpenAIResponse(response, (content) => {
-      setHistory([...newHistory, { role: "assistant", content }]);
+      finalHistory = [...newHistory, { role: "assistant", content }];
+      setHistory(finalHistory);
     });
 
     setSending(false);
 
-    return true;
+    return finalHistory;
   };
 
   return { history, setHistory, sending, sendMessages };

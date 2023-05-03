@@ -1,4 +1,3 @@
-import { createMiddlewareSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { toast } from "react-hot-toast";
 import { createClient } from "@supabase/supabase-js";
 
@@ -96,8 +95,8 @@ export async function updateUserProfile(supabase, profileData) {
   }
 }
 
-export async function verifyServerSideAuth(req, res) {
-  const authHeader = req.headers.get("authorization");
+export async function verifyServerSideAuth(supabase, headers) {
+  const authHeader = headers["authorization"];
 
   if (authHeader) {
     const supabaseService = createClient(
@@ -107,7 +106,7 @@ export async function verifyServerSideAuth(req, res) {
     const possibleKey = authHeader.substring(7);
 
     const { data: apiKey, error: err2 } = await supabaseService
-      .from("apikeys")
+      .from("apikeys, user: users(*)")
       .select("*")
       .eq("key", possibleKey)
       .single();
@@ -115,11 +114,9 @@ export async function verifyServerSideAuth(req, res) {
     if (err2 || !apiKey) {
       console.error("Failed to validate API key", err2);
     } else {
-      return true;
+      return apiKey.user;
     }
   }
-
-  const supabase = createMiddlewareSupabaseClient({ req, res });
 
   const {
     data: { user },
@@ -129,7 +126,7 @@ export async function verifyServerSideAuth(req, res) {
   if (err1 || !user) {
     console.error("Failed to get current user", err1);
   } else {
-    return true;
+    return user;
   }
 
   return false;
