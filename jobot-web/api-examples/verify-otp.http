@@ -1,0 +1,7 @@
+POST http://localhost:3000/api/auth/verify-otp
+content-type: application/json
+
+{
+  "email": "aakashns@example.com",
+  "code": "617274"
+}
