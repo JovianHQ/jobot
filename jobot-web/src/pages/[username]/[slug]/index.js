@@ -5,6 +5,7 @@ import MessageHistory from "@/components/MessageHistory";
 import MessageInput from "@/components/MessageInput";
 import SkillForm from "@/components/SkillForm";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import Layout from "@/components/Layout";
 
 export default function SkillPage({ skill }) {
   const { history, sending, sendMessages } = useOpenAIMessages();
@@ -21,7 +22,7 @@ export default function SkillPage({ skill }) {
         <link rel="icon" href="/jobot_icon.png" type="image/png" />
         <meta property="og:image" content="/jobot_meta.png" />
       </Head>
-      <div className="flex flex-col h-screen">
+      <Layout>
         <Navbar />
 
         {history.length === 1 && (
@@ -34,7 +35,7 @@ export default function SkillPage({ skill }) {
             <MessageInput sending={sending} sendMessages={sendMessages} />
           </>
         )}
-      </div>
+      </Layout>
     </>
   );
 }

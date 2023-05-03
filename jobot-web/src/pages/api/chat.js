@@ -19,6 +19,11 @@ async function handler(req, res) {
 
   const headers = getChatResponseHeaders();
 
+  body.messages = (body.messages || []).map((m) => ({
+    role: m.role,
+    content: m.content,
+  }));
+
   if (body.stream) {
     const stream = await OpenAIStream(body);
     return new Response(stream, { status: 200, headers });

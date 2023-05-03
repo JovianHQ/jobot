@@ -27,7 +27,7 @@ async function getConversations(supabase, user) {
 }
 
 const LeftSidebar = () => {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const { query } = useRouter();
   const supabase = useSupabaseClient();
   const user = useUser();
@@ -37,8 +37,6 @@ const LeftSidebar = () => {
   useEffect(() => {
     getConversations(supabase, user).then(setConversations);
   }, [supabase, user, setConversations]);
-
-  console.log("conversations", conversations);
 
   if (!user) {
     return null;
