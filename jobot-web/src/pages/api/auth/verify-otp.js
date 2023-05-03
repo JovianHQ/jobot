@@ -20,12 +20,24 @@ export default async function handler(req, res) {
 
   const supabase = createServerSupabaseClient({ req, res });
 
-  const { data: data1, error: error1 } = await supabase.auth.verifyOtp({
-    email: email,
+  const supabaseBody = {
     token: code,
-    phone: phone,
     type: phone ? "sms" : "email",
-  });
+  };
+
+  if (email) {
+    supabaseBody.email = email;
+  }
+
+  if (phone) {
+    supabaseBody.phone = phone;
+  }
+
+  console.log("supabaseBody", supabaseBody);
+
+  const { data: data1, error: error1 } = await supabase.auth.verifyOtp(
+    supabaseBody
+  );
 
   if (error1) {
     console.error("Failed to verify code for login", error1);

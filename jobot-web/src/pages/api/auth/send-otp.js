@@ -21,12 +21,23 @@ export default async function handler(req, res) {
 
   const supabase = createServerSupabaseClient({ req, res });
 
-  const { error } = await supabase.auth.signInWithOtp({ email, phone });
+  const supabaseBody = {};
+  if (email) {
+    supabaseBody.email = email;
+  }
+  if (phone) {
+    supabaseBody.phone = phone;
+  }
+
+  console.log("supabase body", supabaseBody);
+
+  const { error } = await supabase.auth.signInWithOtp(supabaseBody);
 
   if (error) {
-    res
-      .send(500)
-      .json({ message: "Failed to send verification code. " + error.message });
+    console.error("Failed to send verification code", error);
+    res.status(500).json({
+      message: "Failed to send verification code. " + error.message,
+    });
     return;
   }
 
