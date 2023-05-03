@@ -16,7 +16,7 @@ async function getAllConversations(supabase, user, res) {
 
 async function createNewConversation(supabase, user, req, res) {
   // get message from body
-  let { messages } = req.body;
+  let { messages, title } = req.body;
 
   // if messages is empty list return 400
   if (!messages || messages.length === 0) {
@@ -28,7 +28,7 @@ async function createNewConversation(supabase, user, req, res) {
     .from("conversations")
     .insert({
       user_id: user.id,
-      title: messages[0].content.slice(0, 40),
+      title: title || messages[0].content.slice(0, 40),
     })
     .select()
     .single();
