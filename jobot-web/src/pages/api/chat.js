@@ -1,12 +1,14 @@
 import { getChatResponseHeaders, verifyServerSideAuth } from "@/network";
 import { OpenAIStream } from "@/utils/openai";
+import { createMiddlewareSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 export const config = {
   runtime: "edge",
 };
 
 async function handler(req, res) {
-  const authenticated = await verifyServerSideAuth(req, res);
+  const supabase = createMiddlewareSupabaseClient({ req, res });
+  const authenticated = await verifyServerSideAuth(supabase, req.headers);
 
   if (!authenticated) {
     return new Response("Unauthorized", { status: 401 });
