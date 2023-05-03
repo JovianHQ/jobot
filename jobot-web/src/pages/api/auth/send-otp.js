@@ -12,10 +12,10 @@ export default async function handler(req, res) {
     res.send(405).json({ message: "Method not supported" });
     return;
   }
-  const { email } = req.body || {};
+  const { email, phone } = req.body || {};
 
-  if (!email) {
-    res.status(400).json({ message: "Email is required" });
+  if (!email || !phone) {
+    res.status(400).json({ message: "Email or phone number is required" });
     return;
   }
 
