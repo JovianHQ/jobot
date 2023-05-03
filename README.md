@@ -60,109 +60,400 @@ Jobot is completely open-source and we welcome all forms of contributions from t
 
 ## API Access
 
-Apart from the web app, you can interact with Jobot via a REST API. The following endpoints are supported:
+Aside from the [web app](https://jobot.jovian.com), you can access Jobot via the following API endpoints to build your own AI-powered applications:
 
+### Send OTP to Email
 
-1. `GET https://jobot.jovian.com/api/skills` (unauthenticated): Provides a list of all available skills as JSON
+Use this endpoint generate a per-user API key. It sends an OTP to a user's email for generating an API key.
 
-2. `GET https://jobot.jovian.com/api/:username/skills` (uauthneticated): Provides a list of skills provided by a user as JSON
+**API endpoint**: https://jobot.jovian.com/api/auth/send-otp
 
-3. `POST https://jobot.jovian.com/api/chat` (authenticated): Use it to send messages to the ChatGPT API
+**Method**: POST
 
-  - Authentication Headers: Create an API key at [https://jobot.jovian.com/account](https://jobot.jovian.com/account) and include it as an `"Authorization"` header with value `"Bearer API_KEY"`
-
-  - Request Body: (similar to [OpenAI chat completions](https://platform.openai.com/docs/api-reference/chat/create))
-
-```json
-{
-  "model": "gpt-3.5-turbo",
-  "messages": [{"role": "user", "content": "Hello!"}]
-}
-
+**Request Body (JSON)**:
 
 ```
-
-  - Response Body (similar to [OpenAI chat completions](https://platform.openai.com/docs/api-reference/chat/create)): 
-
-```json
 {
-  "id": "chatcmpl-123",
-  "object": "chat.completion",
-  "created": 1677652288,
-  "choices": [{
-    "index": 0,
-    "message": {
-      "role": "assistant",
-      "content": "\n\nHello there, how may I assist you today?",
-    },
-    "finish_reason": "stop"
-  }],
-  "usage": {
-    "prompt_tokens": 9,
-    "completion_tokens": 12,
-    "total_tokens": 21
+    "email": string
+}
+```
+
+**Response**:
+
+```
+{
+    "message": "Verification code sent"
+}
+```
+
+### Verify OTP & Generate API Key
+
+Use this endpoint to verify the OTP entered by the user and generate an API key that you can use for future requests.
+
+**API endpoint**: https://jobot.jovian.com/api/auth/verify-otp
+
+**Method**: POST
+
+**Request Body (JSON)**:
+
+```
+{
+    "email": string,
+    "code": string
+}
+```
+
+**Response**:
+
+```
+{
+  "apiKey": {
+    "key": "2211cf69-36bc-4c6d-9081-ae06a03fd235",
+    "user_id": "1234",
+    "name": "API Key - Thu Sep 30 2021 11:51:50 GMT-0700 (Pacific Daylight Time)",
   }
 }
 ```
 
-3. `GET https://jobot.jovian.com/api/:username/:skill` (authenticated): Use it to get the details for
+Use the `key` in the `Authorization` header for endpoints requiring user authentication.
+
+### Chat Completions
+
+Use this to send messages to the ChatGPT API and get back a response. Include an authorization header with a valid Jobot API key. It's identical to [OpenAI's chat completions API](https://platform.openai.com/docs/api-reference/chat/create).
+
+**Request:**
+
+```
+POST /chat
+Content-Type: application/json
+Authorization: Bearer API_KEY
+
+{
+  "model": "gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hi there!"
+    }
+  ],
+  "stream": false
+}
+```
+
+If `stream` is true, the response will be streamed token by token.
+
+**Response**:
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: OPTIONS,GET,POST
+Access-Control-Allow-Headers: x-requested-with,content-type
+
+{
+  "id": "cmpl-2yV4sKhw1JDD9Nf28XNuKlEJ",
+  "object": "text_completion",
+  "created": 1644693056,
+  "model": "text-davinci-002",
+  "choices": [
+    {
+      "text": "Hello! How can I assist you today?",
+      "index": 0,
+      "logprobs": null,
+      "finish_reason": "stopped"
+    }
+  ]
+}
+```
+
+### List Conversations
+
+This endpoint gets all the conversations for a particular user using their API key.
+
+**Method:** GET
+
+**ENDPOINT**: https://jobot.jovian.com/api/conversations
+
+**Headers**: `"Authorization" : "Bearer USER_API_KEY"`
+
+**Response**:
+
+```json
+{
+  "data": [
+    {
+      "id": "03df7fd8-bbb6-4443-8bc8-a3c40fb88356",
+      "title": "Conversation Title",
+      "created_at": "2022-02-13T06:20:03.978988Z",
+      "user_id": "2c337d5f-3fa3-4fc0-a1d1-2934d35757df",
+      "messages": [
+        {
+          "id": "2c0ad242-d122-4a10-b247-2bacfc11a591",
+          "conversation_id": "03df7fd8-bbb6-4443-8bc8-a3c40fb88356",
+          "created_at": "2022-02-13T06:20:03.986683Z",
+          "role": "user",
+          "content": "Hello World"
+        },
+        {
+          "id": "7f9afb1d-f388-44db-8d99-82016c9b114d",
+          "conversation_id": "03df7fd8-bbb6-4443-8bc8-a3c40fb88356",
+          "created_at": "2022-02-13T06:20:04.572231Z",
+          "role": "assistant",
+          "content": "Hola"
+        }
+      ]
+    }
+    // more conversations
+  ]
+}
+```
+
+### Create Conversation
+
+This endpoint creates a new conversation for a particular user. The request body contains an array of messages and a title.
+
+**Endpoint**: https://jobot.jovian.com/api/conversations
+
+**Method**: POST
+
+**Headers**:
+
+- `"Authorization" : "Bearer USER_API_KEY"`
+- `"Content-Type" : "application/json"`
+
+**Sample Request**:
+
+```json
+{
+  "messages": [
+    {
+      "role": 0,
+      "content": "Hey"
+    },
+    {
+      "role": 1,
+      "content": "Hello"
+    }
+  ],
+  "title": "Sample Conversation Title"
+}
+```
+
+**Sample Response**:
+
+```json
+{
+  "data": {
+    "created_at": "2023-05-03T11:07:04.447375+00:00",
+    "user_id": "b3079791-9e64-4344-9049-f8de47a0f0e7",
+    "title": "What is FreeCodeCamp?",
+    "id": "db245948-4010-4104-afba-bbe5f3514a73",
+    "messages": [
+      {
+        "id": "c0318588-0e60-45c8-9996-acfdbf359dc1",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "system",
+        "content": "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs."
+      },
+      {
+        "id": "ab33a56c-4672-46ae-85cf-c22bc337a26f",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "user",
+        "content": "What is FreeCodeCamp?"
+      },
+      {
+        "id": "c806fa20-3964-40b9-b422-0852b6a2a3c1",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "assistant",
+        "content": "FreeCodeCamp is a non-profit organization that offers free coding courses to anyone interested in learning web development."
+      }
+    ]
+  }
+}
+```
+
+### Retrieve Conversation Messages
+
+**Endpoint:** https://jobot.jovian.com/api/conversations/:conversation
+
+**Method**: GET
+
+**Headers**:
+
+- `"Authorization" : "Bearer USER_API_KEY"`
+
+
+**Sample Response**:
+
+```json
+{
+  "data": {
+    "created_at": "2023-05-03T11:07:04.447375+00:00",
+    "user_id": "b3079791-9e64-4344-9049-f8de47a0f0e7",
+    "title": "What is FreeCodeCamp?",
+    "id": "db245948-4010-4104-afba-bbe5f3514a73",
+    "messages": [
+      {
+        "id": "c0318588-0e60-45c8-9996-acfdbf359dc1",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "system",
+        "content": "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs."
+      },
+      {
+        "id": "ab33a56c-4672-46ae-85cf-c22bc337a26f",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "user",
+        "content": "What is FreeCodeCamp?"
+      },
+      {
+        "id": "c806fa20-3964-40b9-b422-0852b6a2a3c1",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "assistant",
+        "content": "FreeCodeCamp is a non-profit organization that offers free coding courses to anyone interested in learning web development."
+      }
+    ]
+  }
+}
+```
+
+### Update Conversation
+
+Use this to add new messages to an existing conversation.
+
+**Endpoint:** https://jobot.jovian.com/api/conversations/:conversation
+
+**Method**: GET
+
+**Headers**:
+
+- `"Authorization" : "Bearer USER_API_KEY"`
+- `"Content-Type" : "application/json"`
+
+
+**Sample Request**:
+
+```json
+POST /api/conversations/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+    "messages": [
+        {
+            "role": "user",
+            "content": "Hello again!"
+        }
+    ]
+}
+```
+
+
+**Sample Response**:
+
+```json
+{
+  "data": {
+    "created_at": "2023-05-03T11:07:04.447375+00:00",
+    "user_id": "b3079791-9e64-4344-9049-f8de47a0f0e7",
+    "title": "What is FreeCodeCamp?",
+    "id": "db245948-4010-4104-afba-bbe5f3514a73",
+    "messages": [
+      {
+        "id": "c0318588-0e60-45c8-9996-acfdbf359dc1",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "system",
+        "content": "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs."
+      },
+      {
+        "id": "ab33a56c-4672-46ae-85cf-c22bc337a26f",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "user",
+        "content": "What is FreeCodeCamp?"
+      },
+      {
+        "id": "c806fa20-3964-40b9-b422-0852b6a2a3c1",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "assistant",
+        "content": "FreeCodeCamp is a non-profit organization that offers free coding courses to anyone interested in learning web development."
+      }
+    ]
+  }
+}
+```
+
+
+
+
+### Retrieve Skills
+
+`GET https://jobot.jovian.com/api/skills` (unauthenticated): Provides a list of all available skills as JSON
+
+### Retrieve a User's Skills
+
+`GET https://jobot.jovian.com/api/:username/skills` (uauthneticated): Provides a list of skills provided by a user as JSON
+
+### Retrieve a Single Skill
+
+`GET https://jobot.jovian.com/api/:username/:skill` (authenticated): Use it to get the details for
 a specific skill
 
-  - Authentication Headers: Create an API key at [https://jobot.jovian.com/account](https://jobot.jovian.com/account) and include it as an `"Authorization"` header with value `"Bearer API_KEY"`
+### Start Conversation for a Skill
 
+Use it to send input data and messages to a specific skill
 
-4. `POST https://jobot.jovian.com/api/:username/:skill` (authenticated): Use it to send input data and messages to a specific skill
+`POST https://jobot.jovian.com/api/:username/:skill` (authenticated)
 
-  - - Authentication Headers: Create an API key at [https://jobot.jovian.com/account](https://jobot.jovian.com/account) and include it as an `"Authorization"` header with value `"Bearer API_KEY"`
+**Authentication Headers**: Create an API key at [https://jobot.jovian.com/account](https://jobot.jovian.com/account) and include it as an `"Authorization"` header with value `"Bearer API_KEY"`
 
-  - Request Body: (similar to [OpenAI chat completions](https://platform.openai.com/docs/api-reference/chat/create) but can include an `inputData` key for initial inputs that are used to create system and user prompt)
-
-```json
-{
-	"inputData": {
-		"topic": "NextJS",
-		"difficulty": "Medium"
-	},
-	"messages": [
-		{
-				"role": "assistant",
-				"content": "What is the purpose of the `_app.js` file in a Next.js project?\n\na) It is used for server-side rendering of the entire application\nb) It is used to customize the `App` component used by Next.js\nc) It is used to configure the routing of the Next.js application\nd) It is used to define the endpoints of the application's API\n\nPlease answer with the corresponding letter of the correct option."
-		},
-		{
-			"role": "user",
-			"content": "D. Who are you?"
-		}
-	]
-}
-```
-
-  - Response Body (similar to [OpenAI chat completions](https://platform.openai.com/docs/api-reference/chat/create)): 
+**Request Body**: (similar to [OpenAI chat completions](https://platform.openai.com/docs/api-reference/chat/create) but can include an `inputData` key for initial inputs that are used to create system and user prompt)
 
 ```json
 {
-	"id": "chatcmpl-79anDx2EENOfDIFmieHWkaJwR7Bwu",
-	"object": "chat.completion",
-	"created": 1682520739,
-	"model": "gpt-3.5-turbo-0301",
-	"usage": {
-		"prompt_tokens": 327,
-		"completion_tokens": 33,
-		"total_tokens": 360
-	},
-	"choices": [
-		{
-			"message": {
-				"role": "assistant",
-				"content": "I am Jobot, an AI assistant created by Jovian. My purpose is to help users test their understanding of a topic by asking them multiple choice questions."
-			},
-			"finish_reason": "stop",
-			"index": 0
-		}
-	]
+  "inputData": {
+    "topic": "NextJS",
+    "difficulty": "Medium"
+  },
+  "messages": [
+    {
+      "role": "assistant",
+      "content": "What is the purpose of the `_app.js` file in a Next.js project?\n\na) It is used for server-side rendering of the entire application\nb) It is used to customize the `App` component used by Next.js\nc) It is used to configure the routing of the Next.js application\nd) It is used to define the endpoints of the application's API\n\nPlease answer with the corresponding letter of the correct option."
+    },
+    {
+      "role": "user",
+      "content": "D. Who are you?"
+    }
+  ]
 }
 ```
 
+**Response Body** (similar to [OpenAI chat completions](https://platform.openai.com/docs/api-reference/chat/create)):
 
+```json
+{
+  "id": "chatcmpl-79anDx2EENOfDIFmieHWkaJwR7Bwu",
+  "object": "chat.completion",
+  "created": 1682520739,
+  "model": "gpt-3.5-turbo-0301",
+  "usage": {
+    "prompt_tokens": 327,
+    "completion_tokens": 33,
+    "total_tokens": 360
+  },
+  "choices": [
+    {
+      "message": {
+        "role": "assistant",
+        "content": "I am Jobot, an AI assistant created by Jovian. My purpose is to help users test their understanding of a topic by asking them multiple choice questions."
+      },
+      "finish_reason": "stop",
+      "index": 0
+    }
+  ]
+}
+```
+
+Apart from the web app, you can interact with Jobot via a REST API. The following endpoints are supported:
 
 ## Deployment
 
@@ -175,17 +466,17 @@ Follow these steps to deploy your own copy of Jobot the Vercel:
 3. Sign up on [Supabase](https://supabase.com) and set up a new project
 
    - Change [Signup & Login Email Templates](https://jovian.com/learn/how-to-build-an-ai) for your project to the following:
-   
+
    Confirm Signup:
-   
+
 ```
 <h2>Confirm your signup</h2>
 
 <p>Enter this code to sign up:</p>
 <p>{{ .Token }}</p>
 ```
-   
-   Magic Link:
+
+Magic Link:
 
 ```
 <h2>Verification Code</h2>
@@ -196,38 +487,34 @@ Follow these steps to deploy your own copy of Jobot the Vercel:
 
 3. Create 2 tables `skills` and `profiles` on the [Supabase Dashboard](https://app.supabase.com/project/_/database/tables) with the following columns:
 
-
 <img width="1083" alt="image" src="https://user-images.githubusercontent.com/1560745/233788441-18da5e96-2149-4a04-a311-4a93e8e4e1ae.png">
 
 <img width="1228" alt="image" src="https://user-images.githubusercontent.com/1560745/233788449-588f9898-e00b-47ba-b4e2-063ea11687e2.png">
 
-
 `profiles` table:
 
-| Name       | Description     | Data Type          | Format  |
-|------------|-----------------|--------------------|---------|
-| id         | No description  | uuid               | uuid    |
-| username   | No description  | character varying  | varchar |
-| first_name | No description  | character varying  | varchar |
-| last_name  | No description  | character varying  | varchar |
-| avatar_url | No description  | character varying  | varchar |
-
+| Name       | Description    | Data Type         | Format  |
+| ---------- | -------------- | ----------------- | ------- |
+| id         | No description | uuid              | uuid    |
+| username   | No description | character varying | varchar |
+| first_name | No description | character varying | varchar |
+| last_name  | No description | character varying | varchar |
+| avatar_url | No description | character varying | varchar |
 
 `skills` table:
 
-| Name          | Description                           | Data Type                 | Format      |
-|---------------|---------------------------------------|---------------------------|-------------|
-| id            | No description                        | bigint                    | int8        |
-| created_at    | No description                        | timestamp with time zone  | timestamptz |
-| updated_at    | No description                        | timestamp with time zone  | timestamptz |
-| user_id       | References the users's ID from auth.users | uuid                      | uuid        |
-| slug          | No description                        | character varying         | varchar     |
-| title         | No description                        | character varying         | varchar     |
-| description   | No description                        | character varying         | varchar     |
-| system_prompt | No description                        | character varying         | varchar     |
-| user_prompt   | No description                        | character varying         | varchar     |
-| inputs        | No description                        | jsonb                     | jsonb       |
-
+| Name          | Description                               | Data Type                | Format      |
+| ------------- | ----------------------------------------- | ------------------------ | ----------- |
+| id            | No description                            | bigint                   | int8        |
+| created_at    | No description                            | timestamp with time zone | timestamptz |
+| updated_at    | No description                            | timestamp with time zone | timestamptz |
+| user_id       | References the users's ID from auth.users | uuid                     | uuid        |
+| slug          | No description                            | character varying        | varchar     |
+| title         | No description                            | character varying        | varchar     |
+| description   | No description                            | character varying        | varchar     |
+| system_prompt | No description                            | character varying        | varchar     |
+| user_prompt   | No description                            | character varying        | varchar     |
+| inputs        | No description                            | jsonb                    | jsonb       |
 
 4. Sign up on [Vercel](https://vercel.com) and deploy Jobot's NextJS application
 
