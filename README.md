@@ -230,12 +230,12 @@ This endpoint creates a new conversation for a particular user. The request body
 {
   "messages": [
     {
-      "role": 0,
-      "content": "Hey"
+      "role": "system",
+      "content": "You are Jobot, a helpful assistant developed by Jovian"
     },
     {
-      "role": 1,
-      "content": "Hello"
+      "role": "user",
+      "content": "Hello, who are you?"
     }
   ],
   "title": "Sample Conversation Title"
