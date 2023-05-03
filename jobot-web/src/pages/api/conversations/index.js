@@ -4,7 +4,7 @@ import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 async function getAllConversations(supabase, user, res) {
   const { data, error } = await supabase
     .from("conversations")
-    .select("*, messages (*)")
+    .select("*, messages (id, created_at, role, content)")
     .eq("user_id", user.id);
 
   if (error) {
