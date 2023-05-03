@@ -126,7 +126,7 @@ Use this to send messages to the ChatGPT API and get back a response. Include an
 **Request:**
 
 ```
-POST /chat
+POST https://jobot.jovian.com/api/chat
 Content-Type: application/json
 Authorization: Bearer API_KEY
 
