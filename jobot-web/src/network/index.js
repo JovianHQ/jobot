@@ -106,7 +106,7 @@ export async function verifyServerSideAuth(supabase, headers) {
     const possibleKey = authHeader.substring(7);
 
     const { data: apiKey, error: err2 } = await supabaseService
-      .from("apikeys")
+      .from("apikeys, user: users(*)")
       .select("*")
       .eq("key", possibleKey)
       .single();
@@ -114,13 +114,7 @@ export async function verifyServerSideAuth(supabase, headers) {
     if (err2 || !apiKey) {
       console.error("Failed to validate API key", err2);
     } else {
-      const { data: user, error: err3 } = await fetchUserProfile(supabase, {
-        id: apiKey.user_id,
-      });
-      if (err3) {
-        console.error("Failed to get user profile", err3);
-      }
-      return user;
+      return apiKey.user;
     }
   }
 
