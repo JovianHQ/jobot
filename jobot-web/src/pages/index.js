@@ -48,18 +48,15 @@ export default function Home() {
     }));
 
     // insert messages using supabase
-    const { data: messagesData, error: messagesError } = await supabase
+    const { error: messagesError } = await supabase
       .from("messages")
-      .insert(unsavedMessages)
-      .select();
+      .insert(unsavedMessages);
 
     if (messagesError) {
       toast.error("Failed to save messages. " + messagesError.message);
       console.error("Failed to save messages", messagesError);
       return false;
     }
-
-    setHistory(messagesData);
 
     router.push(`/conversations/${conversationData.id}`);
   }

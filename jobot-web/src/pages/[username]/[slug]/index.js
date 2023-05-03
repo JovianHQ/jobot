@@ -6,12 +6,64 @@ import MessageInput from "@/components/MessageInput";
 import SkillForm from "@/components/SkillForm";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import Layout from "@/components/Layout";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/router";
 
 export default function SkillPage({ skill }) {
   const { history, sending, sendMessages } = useOpenAIMessages();
+  const supabase = useSupabaseClient();
+  const user = useUser();
+  const router = useRouter();
 
   if (!skill) {
     return null;
+  }
+
+  async function handleSend(newMessages) {
+    const finalHistory = await sendMessages(newMessages);
+
+    if (!finalHistory) {
+      return false;
+    }
+
+    const { data: conversationData, error: conversationError } = await supabase
+      .from("conversations")
+      .insert({
+        user_id: user.id,
+        title: finalHistory
+          .filter((m) => m.role !== "system")[0]
+          .content.slice(0, 40),
+      })
+      .select()
+      .single();
+
+    if (conversationError) {
+      toast.error(
+        "Failed to create conversation. " + conversationError.message
+      );
+      console.error("Failed to create conversation", conversationError);
+      return false;
+    }
+
+    // add conversation id into all messages
+    const unsavedMessages = finalHistory.map((message) => ({
+      ...message,
+      conversation_id: conversationData.id,
+    }));
+
+    // insert messages using supabase
+    const { error: messagesError } = await supabase
+      .from("messages")
+      .insert(unsavedMessages);
+
+    if (messagesError) {
+      toast.error("Failed to save messages. " + messagesError.message);
+      console.error("Failed to save messages", messagesError);
+      return false;
+    }
+
+    router.push(`/conversations/${conversationData.id}`);
   }
 
   return (
@@ -26,13 +78,13 @@ export default function SkillPage({ skill }) {
         <Navbar />
 
         {history.length === 1 && (
-          <SkillForm skill={skill} sendMessages={sendMessages} />
+          <SkillForm skill={skill} sendMessages={handleSend} />
         )}
 
         {history.length > 1 && (
           <>
             <MessageHistory history={history} />
-            <MessageInput sending={sending} sendMessages={sendMessages} />
+            <MessageInput sending={sending} sendMessages={handleSend} />
           </>
         )}
       </Layout>
