@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   const { email, phone, code } = req.body || {};
 
   if (!(email || phone) || !code) {
-    res.status(400).send("The fields `email` and `code` are required");
+    res.status(400).send("The fields `email`/`phone` and `code` are required");
     return;
   }
 

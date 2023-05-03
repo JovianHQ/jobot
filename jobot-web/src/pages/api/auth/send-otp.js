@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   }
   const { email, phone } = req.body || {};
 
-  if (!email || !phone) {
+  if (!email && !phone) {
     res.status(400).json({ message: "Email or phone number is required" });
     return;
   }
