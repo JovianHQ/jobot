@@ -117,11 +117,9 @@ Use this endpoint to verify the OTP entered by the user and generate an API key 
 
 Use the `key` in the `Authorization` header for endpoints requiring user authentication.
 
-
-## Chat Completions
+### Chat Completions
 
 Use this to send messages to the ChatGPT API and get back a response. Include an authorization header with a valid Jobot API key. It's identical to [OpenAI's chat completions API](https://platform.openai.com/docs/api-reference/chat/create).
-
 
 **Request:**
 
@@ -145,6 +143,7 @@ Authorization: Bearer API_KEY
 If `stream` is true, the response will be streamed token by token.
 
 **Response**:
+
 ```
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -170,47 +169,169 @@ Access-Control-Allow-Headers: x-requested-with,content-type
 
 ### List Conversations
 
-TODO
+This endpoint gets all the conversations for a particular user using their API key.
 
+**Method:** GET
+
+**ENDPOINT**: https://jobot.jovian.com/api/conversations
+
+**Headers**: `"Authorization" : "Bearer USER_API_KEY"`
+
+**Response**:
+
+```json
+{
+  "data": [
+    {
+      "id": "03df7fd8-bbb6-4443-8bc8-a3c40fb88356",
+      "title": "Conversation Title",
+      "created_at": "2022-02-13T06:20:03.978988Z",
+      "user_id": "2c337d5f-3fa3-4fc0-a1d1-2934d35757df",
+      "messages": [
+        {
+          "id": "2c0ad242-d122-4a10-b247-2bacfc11a591",
+          "conversation_id": "03df7fd8-bbb6-4443-8bc8-a3c40fb88356",
+          "created_at": "2022-02-13T06:20:03.986683Z",
+          "role": "user",
+          "content": "Hello World"
+        },
+        {
+          "id": "7f9afb1d-f388-44db-8d99-82016c9b114d",
+          "conversation_id": "03df7fd8-bbb6-4443-8bc8-a3c40fb88356",
+          "created_at": "2022-02-13T06:20:04.572231Z",
+          "role": "assistant",
+          "content": "Hola"
+        }
+      ]
+    }
+    // more conversations
+  ]
+}
+```
 
 ### Create Conversation
 
-TODO
+This endpoint creates a new conversation for a particular user. The request body contains an array of messages and a title.
 
+**Endpoint**: https://jobot.jovian.com/api/conversations
+
+**Method**: POST
+
+**Headers**:
+
+- `"Authorization" : "Bearer USER_API_KEY"`
+- `"Content-Type" : "application/json"`
+
+**Sample Request**:
+
+```json
+{
+  "messages": [
+    {
+      "role": 0,
+      "content": "Hey"
+    },
+    {
+      "role": 1,
+      "content": "Hello"
+    }
+  ],
+  "title": "Sample Conversation Title"
+}
+```
+
+**Sample Response**:
+
+```json
+{
+  "data": {
+    "created_at": "2023-05-03T11:07:04.447375+00:00",
+    "user_id": "b3079791-9e64-4344-9049-f8de47a0f0e7",
+    "title": "What is FreeCodeCamp?",
+    "id": "db245948-4010-4104-afba-bbe5f3514a73",
+    "messages": [
+      {
+        "id": "c0318588-0e60-45c8-9996-acfdbf359dc1",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "system",
+        "content": "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs."
+      },
+      {
+        "id": "ab33a56c-4672-46ae-85cf-c22bc337a26f",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "user",
+        "content": "What is FreeCodeCamp?"
+      },
+      {
+        "id": "c806fa20-3964-40b9-b422-0852b6a2a3c1",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "assistant",
+        "content": "FreeCodeCamp is a non-profit organization that offers free coding courses to anyone interested in learning web development."
+      }
+    ]
+  }
+}
+```
 
 ### Retrieve Conversation Messages
 
-TODO
+https://jobot.jovian.com/api/conversations/:conversation
 
+**Sample Response**:
+
+```json
+{
+  "data": {
+    "created_at": "2023-05-03T11:07:04.447375+00:00",
+    "user_id": "b3079791-9e64-4344-9049-f8de47a0f0e7",
+    "title": "What is FreeCodeCamp?",
+    "id": "db245948-4010-4104-afba-bbe5f3514a73",
+    "messages": [
+      {
+        "id": "c0318588-0e60-45c8-9996-acfdbf359dc1",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "system",
+        "content": "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs."
+      },
+      {
+        "id": "ab33a56c-4672-46ae-85cf-c22bc337a26f",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "user",
+        "content": "What is FreeCodeCamp?"
+      },
+      {
+        "id": "c806fa20-3964-40b9-b422-0852b6a2a3c1",
+        "created_at": "2023-05-03T11:07:04.519493+00:00",
+        "role": "assistant",
+        "content": "FreeCodeCamp is a non-profit organization that offers free coding courses to anyone interested in learning web development."
+      }
+    ]
+  }
+}
+```
 
 ### Update Conversation
 
 TODO
 
-
 ### Retrieve Skills
 
 `GET https://jobot.jovian.com/api/skills` (unauthenticated): Provides a list of all available skills as JSON
-
 
 ### Retrieve a User's Skills
 
 `GET https://jobot.jovian.com/api/:username/skills` (uauthneticated): Provides a list of skills provided by a user as JSON
 
-
-
 ### Retrieve a Single Skill
 
 `GET https://jobot.jovian.com/api/:username/:skill` (authenticated): Use it to get the details for
-   a specific skill
-
-
+a specific skill
 
 ### Start Conversation for a Skill
 
 Use it to send input data and messages to a specific skill
 
-`POST https://jobot.jovian.com/api/:username/:skill` (authenticated) 
+`POST https://jobot.jovian.com/api/:username/:skill` (authenticated)
 
 **Authentication Headers**: Create an API key at [https://jobot.jovian.com/account](https://jobot.jovian.com/account) and include it as an `"Authorization"` header with value `"Bearer API_KEY"`
 
@@ -262,7 +383,6 @@ Use it to send input data and messages to a specific skill
 ```
 
 Apart from the web app, you can interact with Jobot via a REST API. The following endpoints are supported:
-
 
 ## Deployment
 
