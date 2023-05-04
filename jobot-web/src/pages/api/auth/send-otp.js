@@ -29,8 +29,6 @@ export default async function handler(req, res) {
     supabaseBody.phone = phone;
   }
 
-  console.log("supabase body", supabaseBody);
-
   const { error } = await supabase.auth.signInWithOtp(supabaseBody);
 
   if (error) {

@@ -146,21 +146,32 @@ export async function ensureUserProfile(supabase, user) {
   let userProfile = await fetchUserProfile(supabase, user);
 
   if (!userProfile) {
-    const email = user.email;
-    const username = email.split("@")[0];
+    let username;
+    if (user.email) {
+      const email = user.email;
+      username = email.split("@")[0];
+    } else if (user.phone) {
+      username = user.phone;
+    } else {
+      username = user.id;
+    }
 
     try {
-      const { error } = await supabase.from("profiles").insert({
-        id: user.id,
-        username: username,
-        first_name: username,
-      });
+      const { data: profile, error } = await supabase
+        .from("profiles")
+        .insert({
+          id: user.id,
+          username: username,
+          first_name: username,
+        })
+        .select()
+        .single();
 
       if (error) {
         throw error;
       }
 
-      return true;
+      return profile;
     } catch (e) {
       console.error("Error while creating profile", e);
       return false;

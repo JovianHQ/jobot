@@ -1,4 +1,4 @@
-import { getChatResponseHeaders } from "@/network";
+import { ensureUserProfile, getChatResponseHeaders } from "@/network";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 export default async function handler(req, res) {
@@ -33,8 +33,6 @@ export default async function handler(req, res) {
     supabaseBody.phone = phone;
   }
 
-  console.log("supabaseBody", supabaseBody);
-
   const { data: data1, error: error1 } = await supabase.auth.verifyOtp(
     supabaseBody
   );
@@ -53,6 +51,14 @@ export default async function handler(req, res) {
   if (!user) {
     console.error("unable to retrieve user");
     res.status(400).json({ message: "Unable to retrieve user" });
+    return;
+  }
+
+  const profile = ensureUserProfile(supabase, user);
+
+  if (!profile) {
+    console.log("unable to create user profile");
+    res.status(500).json({ message: "Unable to create user profile" });
     return;
   }
 
