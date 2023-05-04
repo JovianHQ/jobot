@@ -1,4 +1,4 @@
-import { getChatResponseHeaders } from "@/network";
+import { ensureUserProfile, getChatResponseHeaders } from "@/network";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 export default async function handler(req, res) {
@@ -11,60 +11,54 @@ export default async function handler(req, res) {
     res.status(405).send("Method not supported");
     return;
   }
-  const { email, code } = req.body || {};
+  const { email, phone, code } = req.body || {};
 
-  if (!email || !code) {
-    res.status(400).send("The fields `email` and `code` are required");
+  if (!(email || phone) || !code) {
+    res.status(400).send("The fields `email`/`phone` and `code` are required");
     return;
   }
 
   const supabase = createServerSupabaseClient({ req, res });
-  let user;
 
-  const { data: data1, error: error1 } = await supabase.auth.verifyOtp({
-    email: email,
+  const supabaseBody = {
     token: code,
-    type: "magiclink",
-  });
+    type: phone ? "sms" : "email",
+  };
+
+  if (email) {
+    supabaseBody.email = email;
+  }
+
+  if (phone) {
+    supabaseBody.phone = phone;
+  }
+
+  const { data: data1, error: error1 } = await supabase.auth.verifyOtp(
+    supabaseBody
+  );
 
   if (error1) {
-    console.error("Failed to verify code", error1);
+    console.error("Failed to verify code for login", error1);
     res
       .status(400)
       .json({ message: "Failed to verify code. " + error1.message });
+
     return;
   }
 
-  if (!data1?.user) {
-    const { data: data2, error: error2 } = await supabase.auth.verifyOtp({
-      email: email,
-      token: code,
-      type: "signup",
-    });
-
-    if (!data2?.user) {
-      if (error2) {
-        console.error("Failed to verify code for signup", error2);
-        res
-          .status(400)
-          .json({ message: "Failed to verify code. " + error2.message });
-      } else if (error1) {
-        console.error("Failed to verify code for login", error1);
-        res
-          .status(400)
-          .json({ message: "Failed to verify code. " + error1.message });
-      }
-      return;
-    }
-
-    user = data2?.user;
-  } else {
-    user = data1?.user;
-  }
+  const user = data1?.user;
 
   if (!user) {
     console.error("unable to retrieve user");
     res.status(400).json({ message: "Unable to retrieve user" });
+    return;
+  }
+
+  const profile = ensureUserProfile(supabase, user);
+
+  if (!profile) {
+    console.log("unable to create user profile");
+    res.status(500).json({ message: "Unable to create user profile" });
     return;
   }
 
