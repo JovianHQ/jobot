@@ -56,3 +56,9 @@ jobs:
 
       - name: plantuml
         run: java -jar /usr/share/plantuml/plantuml.jar -verbose ddl/ddl.uml
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "Update DDL graph"
+          add: "./ddl"
