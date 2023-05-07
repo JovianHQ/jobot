@@ -1,0 +1,54 @@
+name: ddl
+
+on:
+  push:
+
+jobs:
+  ddl:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        go:
+          - "1.19"
+          - "1.18"
+          - "1.17"
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Prepare planter
+        run: |
+          psql -U postgres -h localhost -d postgres -c 'CREATE USER planter;'
+          psql -U postgres -h localhost -d postgres -c 'CREATE DATABASE planter OWNER planter;'
+
+      - name: Install Go
+        uses: actions/setup-go/@v2
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Checkout code
+        uses: actions/checkout/@v2
+
+      - name: Load DDL
+        run: cat ddl.sql | psql -U postgres -h localhost -d postgres
+
+      - name: Run planter
+        run: planter "postgresql://postgres@localhost:5432/postgres" --output=ddl/ddl.uml
+
+      - name: plantuml
+        id: plantuml
+        uses: grassedge/generate-plantuml-action@v1.5
+        with:
+          path: ddl
+          message: "Render PlantUML files"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
