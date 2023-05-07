@@ -34,7 +34,11 @@ jobs:
           go-version: ${{ matrix.go }}
 
       - name: Install Planter
-        run: go get -u github.com/achiku/planter
+        run: |
+          cd /tmp
+          git clone https://github.com/achiku/planter.git
+          cd planter
+          go install
 
       - name: Checkout code
         uses: actions/checkout/@v2
