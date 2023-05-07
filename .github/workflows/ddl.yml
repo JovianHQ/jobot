@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout/@v2
 
       - name: Load DDL
-        run: cat ddl.sql | psql -U postgres -h localhost -d postgres
+        run: cat ddl/ddl.sql | psql -U postgres -h localhost -d postgres
 
       - name: Run planter
         run: planter "postgresql://postgres@localhost:5432/postgres?sslmode=disable" --output=ddl/ddl.uml
