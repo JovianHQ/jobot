@@ -13,8 +13,6 @@ jobs:
           - ubuntu-latest
         go:
           - "1.19"
-          - "1.18"
-          - "1.17"
     services:
       postgres:
         image: postgres:12
@@ -34,6 +32,9 @@ jobs:
         uses: actions/setup-go/@v2
         with:
           go-version: ${{ matrix.go }}
+
+      - name: Install Planter
+        run: go get -u github.com/achiku/planter
 
       - name: Checkout code
         uses: actions/checkout/@v2
