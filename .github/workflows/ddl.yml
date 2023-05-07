@@ -47,13 +47,13 @@ jobs:
         run: cat ddl/ddl.sql | psql -U postgres -h localhost -d postgres
 
       - name: Run planter
-        run: planter "postgresql://postgres@localhost:5432/postgres?sslmode=disable" --output=ddl/ddl.uml
+        run: planter "postgresql://postgres@localhost:5432/postgres?sslmode=disable" --output=./ddl/test.uml
 
       - name: plantuml
         id: plantuml
         uses: grassedge/generate-plantuml-action@v1.5
         with:
-          path: ddl
+          path: ./ddl
           message: "Render PlantUML files"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
