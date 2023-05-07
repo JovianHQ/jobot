@@ -33,6 +33,11 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
 
+      - name: Install plantuml
+        run: |
+          sudo apt update
+          sudo apt -y install plantuml
+
       - name: Install Planter
         run: |
           cd /tmp
@@ -50,10 +55,4 @@ jobs:
         run: planter "postgresql://postgres@localhost:5432/postgres?sslmode=disable" --output=./ddl/test.uml
 
       - name: plantuml
-        id: plantuml
-        uses: grassedge/generate-plantuml-action@v1.5
-        with:
-          path: ./ddl
-          message: "Render PlantUML files"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: java -jar /usr/share/plantuml/plantuml.jar -verbose ddl/ddl.uml
