@@ -226,7 +226,7 @@ CREATE POLICY "Enable delete for users via access to conversations" ON public.me
     conversations.title,
     conversations.id
    FROM public.conversations
-  WHERE ((conversations.id = messages.conversation_id) AND (conversations.id = auth.uid())))));
+  WHERE ((conversations.id = messages.conversation_id) AND (conversations.user_id = auth.uid())))));
 
 
 --
@@ -259,7 +259,7 @@ CREATE POLICY "Enable insert for via access to conversations" ON public.messages
     conversations.title,
     conversations.id
    FROM public.conversations
-  WHERE ((conversations.id = messages.conversation_id) AND (conversations.id = auth.uid())))));
+  WHERE ((conversations.id = messages.conversation_id) AND (conversations.user_id = auth.uid())))));
 
 
 --
@@ -292,7 +292,7 @@ CREATE POLICY "Enable read access via access to conversations" ON public.message
     conversations.title,
     conversations.id
    FROM public.conversations
-  WHERE ((conversations.id = messages.conversation_id) AND (conversations.id = auth.uid())))));
+  WHERE ((conversations.id = messages.conversation_id) AND (conversations.user_id = auth.uid())))));
 
 
 --
@@ -317,14 +317,14 @@ CREATE POLICY "Enable read for authenticated owner only" ON public.conversations
 
 
 --
--- Name: conversations Enable update for users based on email; Type: POLICY; Schema: public; Owner: postgres
+-- Name: conversations Enable update for users based on user_id; Type: POLICY; Schema: public; Owner: postgres
 --
 
-CREATE POLICY "Enable update for users based on email" ON public.conversations FOR UPDATE USING ((auth.uid() = user_id)) WITH CHECK ((auth.uid() = user_id));
+CREATE POLICY "Enable update for users based on user_id" ON public.conversations FOR UPDATE USING ((auth.uid() = user_id)) WITH CHECK ((auth.uid() = user_id));
 
 
 --
--- Name: messages Enable update for users based on email; Type: POLICY; Schema: public; Owner: postgres
+-- Name: messages Enable update for users based on user_id; Type: POLICY; Schema: public; Owner: postgres
 --
 
 CREATE POLICY "Enable update for users via access to conversations" ON public.messages FOR UPDATE USING ((EXISTS ( SELECT conversations.created_at,
@@ -332,19 +332,19 @@ CREATE POLICY "Enable update for users via access to conversations" ON public.me
     conversations.title,
     conversations.id
    FROM public.conversations
-  WHERE ((conversations.id = messages.conversation_id) AND (conversations.id = auth.uid()))))) WITH CHECK ((EXISTS ( SELECT conversations.created_at,
+  WHERE ((conversations.id = messages.conversation_id) AND (conversations.user_id = auth.uid()))))) WITH CHECK ((EXISTS ( SELECT conversations.created_at,
     conversations.user_id,
     conversations.title,
     conversations.id
    FROM public.conversations
-  WHERE ((conversations.id = messages.conversation_id) AND (conversations.id = auth.uid())))));
+  WHERE ((conversations.id = messages.conversation_id) AND (conversations.user_id = auth.uid())))));
 
 
 --
--- Name: profiles Enable update for users based on email; Type: POLICY; Schema: public; Owner: postgres
+-- Name: profiles Enable update for users based on user_id; Type: POLICY; Schema: public; Owner: postgres
 --
 
-CREATE POLICY "Enable update for users based on email" ON public.profiles FOR UPDATE USING ((auth.uid() = id)) WITH CHECK ((auth.uid() = id));
+CREATE POLICY "Enable update for users based on user_id" ON public.profiles FOR UPDATE USING ((auth.uid() = id)) WITH CHECK ((auth.uid() = id));
 
 
 --
