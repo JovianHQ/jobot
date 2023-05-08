@@ -23,11 +23,6 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - name: Prepare planter
-        run: |
-          psql -U postgres -h localhost -d postgres -c 'CREATE USER planter;'
-          psql -U postgres -h localhost -d postgres -c 'CREATE DATABASE planter OWNER planter;'
-
       - name: Install Go
         uses: actions/setup-go/@v2
         with:
@@ -49,13 +44,11 @@ jobs:
         uses: actions/checkout/@v2
 
       - name: Load DDL
-        run: cat ddl/ddl.sql | psql -U postgres -h localhost -d postgres
-
-      - name: Run planter
-        run: planter "postgresql://postgres@localhost:5432/postgres?sslmode=disable" --output=./ddl/test.uml
-
-      - name: plantuml
-        run: java -jar /usr/share/plantuml/plantuml.jar -verbose ddl/ddl.uml
+        run: |
+          cat ./ddl/ddl.sql | psql -U postgres -h localhost -d postgres
+          planter "postgresql://postgres@localhost:5432/postgres?sslmode=disable" --output=./ddl/ddl.uml
+          java -jar /usr/share/plantuml/plantuml.jar -verbose ddl/ddl.uml
+          rm ./ddl/ddl.uml
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
