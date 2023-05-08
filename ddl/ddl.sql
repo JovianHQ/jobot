@@ -158,26 +158,26 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: profiles skills_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: profiles profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.profiles
-    ADD CONSTRAINT skills_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT profiles_pkey PRIMARY KEY (id);
 
 
 --
--- Name: skills skills_pkey1; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: skills ; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.skills
-    ADD CONSTRAINT skills_pkey1 PRIMARY KEY (id);
+    ADD CONSTRAINT skills_pkey PRIMARY KEY (id);
 
 --
 -- Name: apikeys apikeys_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.apikeys
-    ADD CONSTRAINT apikeys_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id);
+    ADD CONSTRAINT apikeys_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id) ON DELETE CASCADE;
 
 
 --
@@ -185,7 +185,7 @@ ALTER TABLE ONLY public.apikeys
 --
 
 ALTER TABLE ONLY public.conversations
-    ADD CONSTRAINT conversations_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id);
+    ADD CONSTRAINT conversations_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id) ON DELETE CASCADE;
 
 
 --
