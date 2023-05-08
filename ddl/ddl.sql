@@ -329,7 +329,7 @@ CREATE POLICY "Enable update for users based on email" ON public.conversations F
 -- Name: messages Enable update for users based on email; Type: POLICY; Schema: public; Owner: postgres
 --
 
-CREATE POLICY "Enable update for users based on email" ON public.messages FOR UPDATE USING ((EXISTS ( SELECT conversations.created_at,
+CREATE POLICY "Enable update for users via access to conversations" ON public.messages FOR UPDATE USING ((EXISTS ( SELECT conversations.created_at,
     conversations.user_id,
     conversations.title,
     conversations.id
