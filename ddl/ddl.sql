@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 --
 -- Name: apikeys; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -24,10 +26,10 @@ COMMENT ON TABLE public.apikeys IS 'ApiKeys';
 --
 
 CREATE TABLE public.conversations (
+    id uuid DEFAULT extensions.uuid_generate_v4() NOT NULL,
     created_at timestamp with time zone DEFAULT now(),
     user_id uuid,
-    title character varying,
-    id uuid DEFAULT extensions.uuid_generate_v4() NOT NULL
+    title character varying
 );
 
 
@@ -45,7 +47,7 @@ COMMENT ON TABLE public.conversations IS 'Conversations History';
 --
 
 CREATE TABLE public.messages (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    id uuid DEFAULT extensions.uuid_generate_v4() NOT NULL,
     created_at timestamp with time zone DEFAULT now(),
     role text,
     content text,
@@ -221,7 +223,7 @@ CREATE POLICY "Enable delete for users based on user_id" ON public.conversations
 -- Name: messages Enable delete for users based on user_id; Type: POLICY; Schema: public; Owner: postgres
 --
 
-CREATE POLICY "Enable delete for users based on user_id" ON public.messages FOR DELETE USING ((EXISTS ( SELECT conversations.created_at,
+CREATE POLICY "Enable delete for users via access to conversations" ON public.messages FOR DELETE USING ((EXISTS ( SELECT conversations.created_at,
     conversations.user_id,
     conversations.title,
     conversations.id
@@ -254,7 +256,7 @@ CREATE POLICY "Enable insert for authenticated users only" ON public.conversatio
 -- Name: messages Enable insert for authenticated users only; Type: POLICY; Schema: public; Owner: postgres
 --
 
-CREATE POLICY "Enable insert for authenticated users only" ON public.messages FOR INSERT TO authenticated WITH CHECK ((EXISTS ( SELECT conversations.created_at,
+CREATE POLICY "Enable insert for via access to conversations" ON public.messages FOR INSERT TO authenticated WITH CHECK ((EXISTS ( SELECT conversations.created_at,
     conversations.user_id,
     conversations.title,
     conversations.id
@@ -287,7 +289,7 @@ CREATE POLICY "Enable read access authenticated user only !" ON public.apikeys F
 -- Name: messages Enable read access for all users; Type: POLICY; Schema: public; Owner: postgres
 --
 
-CREATE POLICY "Enable read access for all users" ON public.messages FOR SELECT USING ((EXISTS ( SELECT conversations.created_at,
+CREATE POLICY "Enable read access via access to conversations" ON public.messages FOR SELECT USING ((EXISTS ( SELECT conversations.created_at,
     conversations.user_id,
     conversations.title,
     conversations.id

@@ -43,7 +43,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout/@v2
 
-      - name: Load DDL
+      - name: Process DDL, Generate ERD
         run: |
           cat ./ddl/ddl.sql | psql -U postgres -h localhost -d postgres
           planter "postgresql://postgres@localhost:5432/postgres?sslmode=disable" --output=./ddl/ddl.uml
