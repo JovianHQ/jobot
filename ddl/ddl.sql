@@ -1,12 +1,4 @@
 --
--- Extensions
---
-
-CREATE SCHEMA extensions;
-ALTER SCHEMA extensions OWNER TO postgres;
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA extensions;
-
---
 -- Name: apikeys; Type: TABLE; Schema: public; Owner: postgres
 --
 

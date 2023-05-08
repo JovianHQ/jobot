@@ -45,6 +45,9 @@ jobs:
 
       - name: Process DDL, Generate ERD
         run: |
+          psql -U postgres -h localhost -d postgres -c 'CREATE SCHEMA extensions;'
+          psql -U postgres -h localhost -d postgres -c 'ALTER SCHEMA extensions OWNER TO postgres;'
+          psql -U postgres -h localhost -d postgres -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA extensions;'
           cat ./ddl/ddl.sql | psql -U postgres -h localhost -d postgres
           planter "postgresql://postgres@localhost:5432/postgres?sslmode=disable" --output=./ddl/ddl.uml
           java -jar /usr/share/plantuml/plantuml.jar -verbose ddl/ddl.uml
