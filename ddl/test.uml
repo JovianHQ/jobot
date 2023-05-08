@@ -2,99 +2,33 @@
 hide circle
 skinparam linetype ortho
 
-entity "**customer**" {
-  Customer Information
+entity "**profiles**" {
+  Profile Table
   ..
-  + ""id"": //bigserial [PK]//
+  + ""id"": //uuid [PK]//
   --
-  *""name"": //text  : Customer Name//
-  *""zip_code"": //text  : Customer Zip Code//
-  *""address"": //text  : Customer Address//
-  *""phone_number"": //text  : Customer Phone Number//
-  *""registered_at"": //timestamp with time zone //
+  ""username"": //character varying //
+  ""first_name"": //character varying //
+  ""last_name"": //character varying //
+  ""avatar_url"": //character varying //
+  ""bio"": //character varying //
 }
 
-entity "**customer_order**" {
-  + ""id"": //bigserial [PK]//
+entity "**skills**" {
+  Skills Table
+  ..
+  + ""id"": //bigint [PK]//
   --
-  *""customer_id"": //bigint [FK]//
-  *""delivery_method"": //text //
-  *""shipping_address"": //text //
-  *""payment_method"": //text //
-  *""total_price"": //numeric //
-  *""total_tax_amount"": //numeric //
-  *""ordered_at"": //timestamp with time zone //
+  ""created_at"": //timestamp with time zone //
+  ""updated_at"": //timestamp with time zone //
+  *""user_id"": //uuid [FK]//
+  ""slug"": //character varying //
+  ""title"": //character varying //
+  ""description"": //character varying //
+  ""system_prompt"": //character varying //
+  ""inputs"": //jsonb //
+  ""user_prompt"": //character varying //
 }
 
-entity "**order_detail**" {
-  + ""id"": //bigserial [PK]//
-  + ""customer_order_id"": //bigint [PK][FK]//
-  --
-  *""sku_id"": //bigint [FK]//
-  *""amount"": //bigint //
-  *""price_before_tax"": //numeric //
-  *""price_after_tax"": //numeric //
-  *""ordered_at"": //timestamp with time zone //
-}
-
-entity "**order_detail_approval**" {
-  + ""order_detail_id"": //bigint [PK][FK]//
-  + ""customer_order_id"": //bigint [PK][FK]//
-  --
-  *""operator_id"": //bigint //
-  *""approved_at"": //timestamp with time zone //
-}
-
-entity "**product**" {
-  + ""id"": //bigserial [PK]//
-  --
-  *""vendor_id"": //bigint [FK]//
-  *""name"": //text //
-  *""country"": //text //
-  *""category"": //text //
-}
-
-entity "**sku**" {
-  + ""id"": //bigserial [PK]//
-  --
-  *""product_id"": //bigint [FK]//
-  *""color"": //text //
-  *""size"": //text //
-  *""weight"": //numeric //
-  *""sales_unit_price"": //numeric //
-  *""purchase_unit_price"": //numeric //
-}
-
-entity "**vendor**" {
-  + ""id"": //bigserial [PK]//
-  --
-  *""name"": //text //
-  *""phone_number"": //text //
-}
-
-entity "**vendor_address**" {
-  + ""vendor_id"": //bigint [PK][FK]//
-  --
-  *""zip_code"": //text //
-  *""state"": //text //
-  *""city"": //text //
-  *""line1"": //text //
-  *""line2"": //text //
-}
-
-"**customer_order**"   }--  "**customer**"
-
-"**order_detail**"   }--  "**customer_order**"
-
-"**order_detail**"   }--  "**sku**"
-
-"**order_detail_approval**"  ||-||  "**order_detail**"
-
-"**order_detail_approval**"  ||-||  "**order_detail**"
-
-"**product**"   }--  "**vendor**"
-
-"**sku**"   }--  "**product**"
-
-"**vendor_address**"  ||-||  "**vendor**"
+"**skills**"   }--  "**profiles**"
 @enduml
