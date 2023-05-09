@@ -54,7 +54,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const profile = ensureUserProfile(supabase, user);
+  const profile = await ensureUserProfile(supabase, user);
 
   if (!profile) {
     console.log("unable to create user profile");
