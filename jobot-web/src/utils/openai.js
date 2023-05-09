@@ -4,21 +4,21 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useLoginDialog } from ".";
 
-export const OpenAIStream = async (body) => {
+export const OpenAIStream = async (body, apiKey) => {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
 
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      Authorization: `Bearer ${apiKey || process.env.OPENAI_API_KEY}`,
     },
     method: "POST",
     body: JSON.stringify(body),
   });
 
   if (res.status !== 200) {
-    throw new Error("OpenAI API returned an error");
+    throw new Error("OpenAI API returned an error. " + (await res.text()));
   }
 
   const stream = new ReadableStream({
@@ -65,10 +65,36 @@ export async function streamOpenAIResponse(response, callback) {
     done = doneReading;
     const chunkValue = decoder.decode(value);
     text += chunkValue;
-    callback(text, isFirst);
+    callback({ content: text, role: "assistant" }, isFirst);
     isFirst = false;
   }
+  return { content: text, role: "assistant" };
 }
+
+const useLLM = (serviceUrl) => {
+  async function chat({ body, onStream, onSuccess, onError }) {
+    const response = await fetch(`${serviceUrl}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok || !response.body) {
+      onError(new Error(await response.text()));
+      return;
+    }
+
+    if (body.stream) {
+      const message = await streamOpenAIResponse(response, onStream);
+      onSuccess(message);
+    } else {
+      const resJson = await response.json();
+      onSuccess(resJson.choices[0]);
+    }
+  }
+
+  return { chat };
+};
 
 export async function postOpenAIMessages(messages) {
   return await fetch("/api/chat", {
@@ -91,6 +117,8 @@ export default function useOpenAIMessages(initialHistory = DEFAULT_HISTORY) {
   const [sending, setSending] = useState(false);
   const user = useUser();
 
+  const llm = useLLM("/api/llmservice");
+
   const sendMessages = async (newMessages) => {
     if (!user) {
       toast("Please log in to send a message");
@@ -103,21 +131,26 @@ export default function useOpenAIMessages(initialHistory = DEFAULT_HISTORY) {
     setSending(true);
     setHistory(newHistory);
 
-    const response = await postOpenAIMessages(newHistory);
-
-    if (!response.ok || !response.body) {
-      setSending(false);
-      setHistory(oldHistory);
-      toast.error("Failed to send:" + response.statusText);
-    }
-
     let finalHistory;
-    await streamOpenAIResponse(response, (content) => {
-      finalHistory = [...newHistory, { role: "assistant", content }];
-      setHistory(finalHistory);
-    });
 
-    setSending(false);
+    await llm.chat({
+      body: { messages: newHistory, stream: true },
+      onStream: (message) => {
+        finalHistory = [...newHistory, message];
+        setHistory(finalHistory);
+      },
+      onSuccess: (message) => {
+        setSending(false);
+        finalHistory = [...newHistory, message];
+        setHistory(finalHistory);
+      },
+      onError: (error) => {
+        setSending(false);
+        setHistory(oldHistory);
+        toast.error("Failed to send:" + error.message);
+        console.error("Faild to send", error);
+      },
+    });
 
     return finalHistory;
   };

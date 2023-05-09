@@ -24,9 +24,15 @@ async function handler(req, res) {
     content: m.content,
   }));
 
+  console.log("sending body", body);
+
   if (body.stream) {
-    const stream = await OpenAIStream(body);
-    return new Response(stream, { status: 200, headers });
+    try {
+      const stream = await OpenAIStream(body);
+      return new Response(stream, { status: 200, headers });
+    } catch (e) {
+      return new Response(e.message, { status: 500, headers });
+    }
   } else {
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       headers: {
