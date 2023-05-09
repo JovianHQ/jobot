@@ -1,9 +1,13 @@
-import { verifyServerSideAuth } from "@/network";
+import { getChatResponseHeaders, verifyServerSideAuth } from "@/network";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 export default async function handler(req, res) {
   const supabase = createServerSupabaseClient({ req, res });
   const user = await verifyServerSideAuth(supabase, req.headers);
+  const headers = getChatResponseHeaders();
+  for (const key in headers) {
+    res.setHeader(key, headers[key]);
+  }
 
   if (!user) {
     return res.status(401).json({ message: "Unauthorized" });
