@@ -96,7 +96,18 @@ export async function updateUserProfile(supabase, profileData) {
 }
 
 export async function verifyServerSideAuth(supabase, headers) {
-  const authHeader = headers["authorization"];
+
+  let authHeader;
+
+  try {
+    authHeader = headers.get('authorization');
+  } catch (e) {
+    try {
+      authHeader = headers['authorization'];
+    } catch (e2) {
+      console.log("header not found")
+    }
+  }
 
   if (authHeader) {
     const supabaseService = createClient(
@@ -116,20 +127,18 @@ export async function verifyServerSideAuth(supabase, headers) {
     } else {
       return apiKey.profile;
     }
-  }
-
-  const {
-    data: { user },
-    error: err1,
-  } = await supabase.auth.getUser();
-
-  if (err1 || !user) {
-    console.error("Failed to get current user", err1);
   } else {
-    return user;
-  }
+    const {
+      data: { user },
+      error: err1,
+    } = await supabase.auth.getUser();
 
-  return false;
+    if (err1 || !user) {
+      console.error("Failed to get current user", err1);
+    } else {
+      return user;
+    }
+  }
 }
 
 export function getChatResponseHeaders() {

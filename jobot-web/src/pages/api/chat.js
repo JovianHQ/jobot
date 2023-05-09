@@ -9,15 +9,15 @@ export const config = {
 async function handler(req, res) {
   const supabase = createMiddlewareSupabaseClient({ req, res });
   const authenticated = await verifyServerSideAuth(supabase, req.headers);
+  const headers = getChatResponseHeaders();
 
   if (!authenticated) {
-    return new Response("Unauthorized", { status: 401 });
+    return new Response(`{ "message": "Unauthorized"}`, { status: 401, headers });
   }
 
   const body = await req.json();
   body.model = "gpt-3.5-turbo";
 
-  const headers = getChatResponseHeaders();
 
   body.messages = (body.messages || []).map((m) => ({
     role: m.role,
