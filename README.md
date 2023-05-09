@@ -10,7 +10,7 @@ Jobot has (or will soon have) the following abilities:
 
 - ✅ Intelligence (powered by GPT-3.5/4)
 - ✅ Skills (preconfigured prompts)
-- ⬜️ Memory 
+- ⬜️ Memory
   - ✅ Conversations (database)
   - ⬜️ Knowledge Base (embeddings)
 - ⬜️ Hearing (powered by Whisper)
@@ -285,7 +285,6 @@ This endpoint creates a new conversation for a particular user. The request body
 
 - `"Authorization" : "Bearer USER_API_KEY"`
 
-
 **Sample Response**:
 
 ```json
@@ -332,7 +331,6 @@ Use this to add new messages to an existing conversation.
 - `"Authorization" : "Bearer USER_API_KEY"`
 - `"Content-Type" : "application/json"`
 
-
 **Sample Request**:
 
 ```json
@@ -349,7 +347,6 @@ Content-Type: application/json
     ]
 }
 ```
-
 
 **Sample Response**:
 
@@ -383,9 +380,6 @@ Content-Type: application/json
   }
 }
 ```
-
-
-
 
 ### Retrieve Skills
 
@@ -487,7 +481,17 @@ Magic Link:
 <p>{{ .Token }}</p>
 ```
 
-3. Create 2 tables `skills` and `profiles` on the [Supabase Dashboard](https://app.supabase.com/project/_/database/tables) with the following columns:
+1. Create tables on the [Supabase Dashboard](https://app.supabase.com/project/_/database/tables):
+
+To create the required database setup, you can go to your supabase account, click left on 'SQL Editor' and click on 'New query'.
+
+In the empty screen paste the contents of the file 'ddl/ddl.sql', and then click on 'RUN'.
+Now the tables will be created as well as all the row level policies.
+
+The structure created looks like:
+[![](ddl/ddl.png)]()
+
+Alternatively, you can create each table manually yourself
 
 <img width="1083" alt="image" src="https://user-images.githubusercontent.com/1560745/233788441-18da5e96-2149-4a04-a311-4a93e8e4e1ae.png">
 
