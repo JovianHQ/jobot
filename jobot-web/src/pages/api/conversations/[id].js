@@ -9,12 +9,6 @@ export default async function handler(req, res) {
     res.setHeader(key, headers[key]);
   }
 
-  console.log(user, "user");
-  const headers = getChatResponseHeaders();
-  for (const key in headers) {
-    res.setHeader(key, headers[key]);
-  }
-
   if (!user) {
     return res.status(401).json({ message: "Unauthorized" });
   }
