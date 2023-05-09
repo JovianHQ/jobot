@@ -213,7 +213,9 @@ This endpoint gets all the conversations for a particular user using their API k
 
 ### Create Conversation
 
-This endpoint creates a new conversation for a particular user. The request body contains an array of messages and a title.
+This endpoint creates a new conversation for a particular user. The request body contains an array of messages and a title. 
+
+**NOTE**: This API simply creates a conversation, and doesn't invoke the OpenAI API to generate a reply from Jobot. You must separately invoke the `/chat` enpoint to generate a reply.
 
 **Endpoint**: https://jobot.jovian.com/api/conversations
 
@@ -321,6 +323,9 @@ This endpoint creates a new conversation for a particular user. The request body
 ### Update Conversation
 
 Use this to add new messages to an existing conversation.
+
+**NOTE**: This API simply addes messages to a conversation, and doesn't invoke the OpenAI API to generate a reply from Jobot. You must separately invoke the `/chat` enpoint to generate a reply.
+
 
 **Endpoint:** https://jobot.jovian.com/api/conversations/:conversation
 
