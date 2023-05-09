@@ -10,8 +10,6 @@ export default async function handler(req, res) {
   }
   const user = await verifyServerSideAuth(supabase, req.headers);
 
-  console.log("user", user);
-
   if (!user) {
     return res.status(401).json({ message: "Unauthorized" });
   }
