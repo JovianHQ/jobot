@@ -11,7 +11,7 @@ async function handler(req, res) {
   const authenticated = await verifyServerSideAuth(supabase, req.headers);
 
   if (!authenticated) {
-    return new Response("Unauthorized", { status: 401 });
+    return new Response(`{ "message": "Unauthorized"}`, { status: 401 });
   }
 
   const body = await req.json();
