@@ -1,0 +1,60 @@
+name: ddl
+
+on:
+  push:
+
+jobs:
+  ddl:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        go:
+          - "1.19"
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Install Go
+        uses: actions/setup-go/@v2
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Install plantuml
+        run: |
+          sudo apt update
+          sudo apt -y install plantuml
+
+      - name: Install Planter
+        run: |
+          cd /tmp
+          git clone https://github.com/achiku/planter.git
+          cd planter
+          go install
+
+      - name: Checkout code
+        uses: actions/checkout/@v2
+
+      - name: Process DDL, Generate ERD
+        run: |
+          psql -U postgres -h localhost -d postgres -c 'CREATE SCHEMA extensions;'
+          psql -U postgres -h localhost -d postgres -c 'ALTER SCHEMA extensions OWNER TO postgres;'
+          psql -U postgres -h localhost -d postgres -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA extensions;'
+          cat ./ddl/ddl.sql | psql -U postgres -h localhost -d postgres
+          planter "postgresql://postgres@localhost:5432/postgres?sslmode=disable" --output=./ddl/ddl.uml
+          java -jar /usr/share/plantuml/plantuml.jar -verbose ddl/ddl.uml
+          rm ./ddl/ddl.uml
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "Update DDL graph"
+          add: "./ddl"
