@@ -1,7 +1,11 @@
-import { verifyServerSideAuth } from "@/network";
+import { getChatResponseHeaders, verifyServerSideAuth } from "@/network";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 async function getAllConversations(supabase, user, res) {
+  const headers = getChatResponseHeaders();
+  for (const key in headers) {
+    res.setHeader(key, headers[key]);
+  }
   const { data, error } = await supabase
     .from("conversations")
     .select("*, messages (id, created_at, role, content)")
