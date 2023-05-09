@@ -10,6 +10,8 @@ async function handler(req, res) {
   const supabase = createMiddlewareSupabaseClient({ req, res });
   const authenticated = await verifyServerSideAuth(supabase, req.headers);
 
+  console.log("authenticated", authenticated);
+
   if (!authenticated) {
     return new Response("Unauthorized", { status: 401 });
   }
