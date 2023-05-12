@@ -10,7 +10,7 @@ const llmService = createLLMService({
   openaiApiKey: process.env.OPENAI_API_KEY,
 });
 
-async function handler(req, res) {
+export default async function handler(req, res) {
   const supabase = createMiddlewareSupabaseClient({ req, res });
   const authenticated = await verifyServerSideAuth(supabase, req.headers);
   const headers = getChatResponseHeaders();
@@ -23,12 +23,6 @@ async function handler(req, res) {
   }
 
   const body = await req.json();
-  body.model = "gpt-3.5-turbo";
-
-  body.messages = (body.messages || []).map((m) => ({
-    role: m.role,
-    content: m.content,
-  }));
 
   try {
     const data = await llmService.handle(body);
@@ -37,5 +31,3 @@ async function handler(req, res) {
     return new Response(error.message, { status: 400 });
   }
 }
-
-export default handler;

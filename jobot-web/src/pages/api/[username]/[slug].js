@@ -1,7 +1,7 @@
 import { fillTemplate } from "@/components/SkillForm";
 import { getChatResponseHeaders, verifyServerSideAuth } from "@/network";
-import { OpenAIStream } from "@/utils/openai";
 import { createMiddlewareSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { createLLMService } from "usellm";
 
 export const config = {
   runtime: "edge",
@@ -9,6 +9,10 @@ export const config = {
 
 const SYSTEM_MESSAGE =
   "You are Jobot, a helpful and verstaile AI created by Jovian using state-of the art ML models and APIs.";
+
+const llmService = createLLMService({
+  openaiApiKey: process.env.OPENAI_API_KEY,
+});
 
 export default async function handler(req, res) {
   const url = new URL(req.url);
@@ -65,20 +69,10 @@ export default async function handler(req, res) {
 
   delete body.inputData;
 
-  if (body.stream) {
-    const stream = await OpenAIStream(body);
-    return new Response(stream, { status: 200, headers });
-  } else {
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-      method: "POST",
-      body: JSON.stringify(body),
-    });
-    const resText = await res.text();
-    headers["Content-Type"] = "application/json";
-    return new Response(resText, { status: 200, headers });
+  try {
+    const data = await llmService.handle(body);
+    return new Response(data, { status: 200 });
+  } catch (error) {
+    return new Response(error.message, { status: 400 });
   }
 }
