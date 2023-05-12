@@ -26,8 +26,8 @@ export default async function handler(req, res) {
 
   try {
     const data = await llmService.handle(body);
-    return new Response(data, { status: 200 });
+    return new Response(data, { status: 200, headers });
   } catch (error) {
-    return new Response(error.message, { status: 400 });
+    return new Response(error.message, { status: 400, headers });
   }
 }
