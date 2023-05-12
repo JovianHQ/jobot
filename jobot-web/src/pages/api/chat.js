@@ -30,6 +30,8 @@ async function handler(req, res) {
     content: m.content,
   }));
 
+  body.$action = "chat";
+
   try {
     const data = await llmService.handle(body);
     return new Response(data, { status: 200, headers });
